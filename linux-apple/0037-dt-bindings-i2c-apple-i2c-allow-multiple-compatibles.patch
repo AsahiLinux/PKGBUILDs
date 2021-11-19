@@ -1,0 +1,36 @@
+From 9a453ff2df79517949652d6ae9458be64a6a7eb2 Mon Sep 17 00:00:00 2001
+From: Janne Grunau <j@jannau.net>
+Date: Fri, 19 Nov 2021 19:41:13 +0100
+Subject: [PATCH 37/40] dt-bindings: i2c: apple,i2c: allow multiple compatibles
+
+The intention was to have a model and base compatible string like:
+compatible = "apple,t8103-i2c", "apple,i2c";
+
+Fixes: df7c4a8c1b47 ("dt-bindings: i2c: Add Apple I2C controller bindings")
+
+Signed-off-by: Janne Grunau <j@jannau.net>
+---
+ Documentation/devicetree/bindings/i2c/apple,i2c.yaml | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/i2c/apple,i2c.yaml b/Documentation/devicetree/bindings/i2c/apple,i2c.yaml
+index 22fc8483256f..7d171a544bbb 100644
+--- a/Documentation/devicetree/bindings/i2c/apple,i2c.yaml
++++ b/Documentation/devicetree/bindings/i2c/apple,i2c.yaml
+@@ -20,9 +20,10 @@ allOf:
+ 
+ properties:
+   compatible:
+-    enum:
+-      - apple,t8103-i2c
+-      - apple,i2c
++    items:
++      - enum:
++        - apple,t8103-i2c
++      - const: apple,i2c
+ 
+   reg:
+     maxItems: 1
+-- 
+2.33.1
+

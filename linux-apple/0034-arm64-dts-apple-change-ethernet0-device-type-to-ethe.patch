@@ -1,0 +1,30 @@
+From 99766406f9a1339aca7ff8555af8775a742d59d8 Mon Sep 17 00:00:00 2001
+From: Janne Grunau <j@jannau.net>
+Date: Sun, 14 Nov 2021 14:51:26 +0100
+Subject: [PATCH 34/40] arm64: dts: apple: change ethernet0 device type to
+ ethernet
+
+Fixes make dtbs_check errors for t8103-j274.dts due to missing pci
+properties.
+
+Signed-off-by: Janne Grunau <j@jannau.net>
+---
+ arch/arm64/boot/dts/apple/t8103-j274.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/apple/t8103-j274.dts b/arch/arm64/boot/dts/apple/t8103-j274.dts
+index 33a80f9501dc..02c36301e985 100644
+--- a/arch/arm64/boot/dts/apple/t8103-j274.dts
++++ b/arch/arm64/boot/dts/apple/t8103-j274.dts
+@@ -60,7 +60,7 @@ &port01 {
+ 
+ &port02 {
+ 	bus-range = <3 3>;
+-	ethernet0: pci@0,0 {
++	ethernet0: ethernet@0,0 {
+ 		reg = <0x30000 0x0 0x0 0x0 0x0>;
+ 		/* To be filled by the loader */
+ 		local-mac-address = [00 10 18 00 00 00];
+-- 
+2.33.1
+

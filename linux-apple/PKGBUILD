@@ -1,0 +1,291 @@
+# AArch64 Apple Silicon (Asahi Linux)
+# Maintainer: Janne Grunau <j@jannau.net>
+
+buildarch=8
+
+_rcver=5.16
+_rcrel=1
+
+pkgbase=linux-apple
+_srcname=linux-${_rcver}-rc${_rcrel}
+_kernelname=${pkgbase#linux}
+_desc="AArch64 Apple Silicon (M1 development kernel)"
+pkgver=${_rcver}.rc${_rcrel}
+pkgrel=1
+arch=('aarch64')
+url="http://www.kernel.org/"
+license=('GPL2')
+makedepends=('xmlto' 'docbook-xsl' 'kmod' 'inetutils' 'bc' 'git' 'dtc')
+options=('!strip')
+source=("https://git.kernel.org/torvalds/t/${_srcname}.tar.gz"
+        '0001-pinctrl-apple-Always-return-valid-type-in-apple_gpio.patch'
+        '0002-irqchip-apple-aic-Add-support-for-AICv2.patch'
+        '0003-arm64-dts-apple-Add-initial-t6000-t6001-DTs.patch'
+        '0004-arm64-dts-apple-Add-J314-and-J316-devicetrees.patch'
+        '0005-fixup-arm64-dts-apple-Add-J314-and-J316-devicetrees.patch'
+        '0006-PCI-apple-Fix-REFCLK1-enable-poll-logic.patch'
+        '0007-PCI-apple-WIP-enable-clock-gating.patch'
+        '0008-dt-bindings-usb-Add-Apple-dwc3-bindings.patch'
+        '0009-usb-dwc3-Add-role-switch-reset-quirk-for-Apple-DWC3.patch'
+        '0010-usb-typec-tipd-Fix-typo-in-cd321x_switch_power_state.patch'
+        '0011-usb-typec-tipd-Fix-initialization-sequence-for-cd321.patch'
+        '0012-mmc-sdhci-pci-gli-GL9755-Support-for-CD-WP-inversion.patch'
+        '0013-mmc-sdhci-pci-gli-GL9755-Issue-8-16-bit-MMIO-reads-a.patch'
+        '0014-WIP-soc-apple-rtkit-Add-RTKit-library.patch'
+        '0015-dt-bindings-soc-apple-Add-Apple-SART-bindings.patch'
+        '0016-soc-apple-sart-Add-SART-driver.patch'
+        '0017-nvme-add-NVME_QUIRK_NO_SCAN_NS_LIST.patch'
+        '0018-WIP-nvme-Add-Apple-ANS2-NVMe-host-driver.patch'
+        '0019-arm64-dts-apple-Add-ANS2-nodes-to-t6001.dtsi.patch'
+        '0020-soc-apple-sart-Add-SARTv3-support.patch'
+        '0021-drm-format-helper-Add-drm_fb_xrgb8888_to_xrgb2101010.patch'
+        '0022-drm-simpledrm-Bind-to-OF-framebuffers-in-chosen.patch'
+        '0023-drm-simpledrm-Add-XRGB2101010-format.patch'
+        '0024-drm-format-helper-Fix-dst-computation-in-drm_fb_xrgb.patch'
+        '0025-io-pgtable-arm-Fix-table-descriptor-paddr-formatting.patch'
+        '0026-dt-bindings-iommu-dart-add-t6000-compatible.patch'
+        '0027-iommu-io-pgtable-Add-DART-subpage-protection-support.patch'
+        '0028-iommu-io-pgtable-Add-DART-PTE-support-for-t6000.patch'
+        '0029-iommu-dart-Support-t6000-variant.patch'
+        '0030-dt-bindings-watchdog-Add-Apple-Watchdog.patch'
+        '0031-watchdog-Add-Apple-SoC-watchdog-driver.patch'
+        '0032-arm64-dts-apple-t8103-Add-watchdog-node.patch'
+        '0033-arm64-dts-apple-add-watchdog-node.patch'
+        '0034-arm64-dts-apple-change-ethernet0-device-type-to-ethe.patch'
+        '0035-dt-bindings-arm-apple-Add-iMac-24-inch-2021-to-Apple.patch'
+        '0036-arm64-dts-apple-Add-missing-M1-t8103-devices.patch'
+        '0037-dt-bindings-i2c-apple-i2c-allow-multiple-compatibles.patch'
+        '0038-dt-bindings-i2c-apple-i2c-add-apple-t6000-i2c-compat.patch'
+        '0039-arm64-dts-apple-t8103-add-USB-C-related-nodes.patch'
+        '0040-arm64-dts-apple-add-interrupt-cells-property-to-pinc.patch'
+        'config'
+        'linux.preset'
+        '60-linux.hook'
+        '90-linux.hook')
+sha256sums=('f15cb8ed94671ac2e094380b429bafdab04f44bc3f29cca0b050ee2370a21d2c'
+            '5124200a36c308c4a82b31a1a3f801a214f36391277b2df7af0ce5a7e66d9e43'
+            '37f559cd276f412fb53610e1619ae15ca32910ca473694fe6995d7826fff818d'
+            '5ec15a773e91d5444eaff2df4a8f69fe0c392b2ddfb659b54941778b80f792b4'
+            'fa4fbcbd1faf7c7de8dfbf9b04fa465a05672883c950ee3cd09128ccb6602b40'
+            '5d480eacd3ef5eb05ef412454728f7a311c805dd6679fe2905a87a94b4a3a19b'
+            '7b616a00df4daa211c67e1fea228898f1acf699c984fbdf7814d9038fc2a61a2'
+            '17c0fb2b79caccac3f30933acd9b6270a0c235586100ee019b04944e97846cb6'
+            'e64db187374af6e4b00755debe3da2eeca267057d02231e5b23c36860ce46871'
+            'c2dc229437a411ca93d9abc2b5bc6e298f3f2bf300a1df831d64048ffe619771'
+            '9327691e251c10efcb9c6c8999b4c6e07b7bd9459c50d4010c85b347ce1fc1f3'
+            'afd2697867014a4cb6b86d86dd23004752cfd9991ea80faeb4c1dacff0a8708a'
+            'ddbca9e75e5c2d29f6975352a19de7de3654ae259a9adda057bc643014f554be'
+            '96d157be28db5ccc61139ff6fd2cf40a789729e515ca0d2849a72307aed784c3'
+            '6998b9a06940137ca1cdbf4424341d5a72659b528198043d9b4e14824258f4ee'
+            '3e171b90a33c2467912e654e552d401cf72693c54e271db0e085400ee50a03fb'
+            '7765275a1595e2fe827de1cdfcf5684e48809ad063e9648cf6fc7485ce1f11c1'
+            '6d41adf5d11dfee74e3ce7b8fa5fabdc67b040bceeda690e978fea7a97a8b254'
+            'c77cac447459a6bea4793770eec10b04e39fce02f00939e600123a77a3d5d731'
+            '504fb853bef7f24dd437acafe012307108b3982e93dd243dc03a900698b73547'
+            '7f3e3455f0532cd93b2273b0034f752a6164eb58ce48ab6378332b01712c8273'
+            '097c0bb4262259b2ccf840790a3c9d9fc340ed78bbe459c984fa70e1c28d746f'
+            '2c933cab055603cd1ff6de5517f9c93908acfce0e75b39ef71e00d925f145c1e'
+            '8134f5092043b652827593139bffdb2b239d8d96c521fc62cfbdc7e84f2c8f2f'
+            '40a99e17909fb9cd674bce7a2a7858c86ed67cce7b09c052de870e8590d7cbaa'
+            '30a6b94356b44516e6149b59e844e7fa7ad3b84011c45b0c68843f19b834e572'
+            'c6e57106d866974f7441fa54610fc219e164eb8c748125a3169ecac96f498896'
+            '20817950d75fc234f7b4d96172b2afc1d188e1c55551864a09a2497a80c45fe0'
+            '051fd38ad92b2ea4d9c2be19333d07073abee249c98ed8484fa538dba0348d25'
+            '70e598341ba50f3e51fde8975d18f8b6e202811ce45b582eb37b32a174c599ab'
+            '668ec724dc09afd0731136c04dcf6ffc78bf4b9a137f9f07e340611f8e965bfa'
+            'c680f2a8fe68ca177c99210fd3a9288b8d667f9548a27458220a4ea3d19c33c0'
+            '823a2288d339d0013de14471221268444a458d60a9cceeb38b9655becbc33b98'
+            'de897754ddbac5fbf3c50742768595f0555955a2ffe269d1de687a96c8410a6b'
+            '39c213fef66c10209dc3760286c869319599c9669ef2c1421979665bf1bcb43d'
+            'be87628c3d8e13e2f8d4ff82a493aee9bd61ce85441360aa78bfe8a95cd98c2b'
+            '97cd72f6470497eb2c1b98b1fa383ce2bc62eb46e6233dae9614a341cafdfd7f'
+            '1a5102e1cfcdbcf3a215a995f8cfddf945007ce70d9d010d3e486ff6ea138f56'
+            'f29d30b3dba6e56aa674ec72216e0d549672a038c956b0d3db1443cd10d3f563'
+            '463cbf852fe2bfaf04c4b01380974fb9d4832a43f39e9ceca39cae5db11361d1'
+            'bdb0a466bb75ae2d37ac31ef6e26667623c413dad4d4d8e58fc3d9b1e23666f7'
+            '3d3e1b9da689cee7970941f43dd262008f66f637f83688d6d36aa425b38be96d'
+            '6837b3e2152f142f3fff595c6cbd03423f6e7b8d525aac8ae3eb3b58392bd255'
+            'ae2e95db94ef7176207c690224169594d49445e04249d2499e9d2fbc117a0b21'
+            '71df1b18a3885b151a3b9d926a91936da2acc90d5e27f1ad326745779cd3759d')
+
+prepare() {
+  cd "${srcdir}/${_srcname}"
+
+  # ALARM patches
+
+  cat "${srcdir}/config" > ./.config
+
+  # add pkgrel to extraversion
+  sed -ri "s|^(EXTRAVERSION =)(.*)|\1 \2-${pkgrel}|" Makefile
+
+  # don't run depmod on 'make install'. We'll do this ourselves in packaging
+  sed -i '2iexit 0' scripts/depmod.sh
+}
+
+build() {
+  cd "${srcdir}/${_srcname}"
+
+  make olddefconfig # Same as oldconfig but sets new symbols to their default value without prompting
+  # get kernel version
+  make prepare
+
+  # load configuration
+  # Configure the kernel. Replace the line below with one of your choice.
+  #make menuconfig # CLI menu for configuration
+  #make nconfig # new CLI menu for configuration
+  #make xconfig # X-based configuration
+  #make oldconfig # using old config from previous kernel version
+  # ... or manually edit .config
+
+  # Copy back our configuration (use with new kernel version)
+  #cp ./.config ../${pkgbase}.config
+
+  ####################
+  # stop here
+  # this is useful to configure the kernel
+  #msg "Stopping build"
+  #return 1
+  ####################
+
+  #yes "" | make config
+
+  # build!
+  unset LDFLAGS
+  make ${MAKEFLAGS} Image Image.gz modules
+  make ${MAKEFLAGS} DTC_FLAGS="-@" dtbs
+}
+
+_package() {
+  pkgdesc="The Linux Kernel and modules - ${_desc}"
+  depends=('coreutils' 'linux-firmware' 'kmod' 'mkinitcpio>=0.7')
+  optdepends=('crda: to set the correct wireless channels of your country')
+  provides=("linux=${pkgver}" "WIREGUARD-MODULE")
+  replaces=('linux-armv8')
+  conflicts=('linux')
+  backup=("etc/mkinitcpio.d/${pkgbase}.preset")
+  install=${pkgname}.install
+
+  cd ${_srcname}
+
+  KARCH=arm64
+
+  # get kernel version
+  _kernver="$(make kernelrelease)"
+  _basekernel=${_kernver%%-*}
+  _basekernel=${_basekernel%.*}
+
+  mkdir -p "${pkgdir}"/{boot,usr/lib/modules}
+  make INSTALL_MOD_PATH="${pkgdir}/usr" modules_install
+  make INSTALL_DTBS_PATH="${pkgdir}/boot/dtbs" dtbs_install
+  cp arch/$KARCH/boot/Image{,.gz} "${pkgdir}/boot"
+
+  # make room for external modules
+  local _extramodules="extramodules-${_basekernel}${_kernelname}"
+  ln -s "../${_extramodules}" "${pkgdir}/usr/lib/modules/${_kernver}/extramodules"
+
+  # add real version for building modules and running depmod from hook
+  echo "${_kernver}" |
+    install -Dm644 /dev/stdin "${pkgdir}/usr/lib/modules/${_extramodules}/version"
+
+  # remove build and source links
+  rm "${pkgdir}"/usr/lib/modules/${_kernver}/{source,build}
+
+  # now we call depmod...
+  depmod -b "${pkgdir}/usr" -F System.map "${_kernver}"
+
+  # add vmlinux
+  install -Dt "${pkgdir}/usr/lib/modules/${_kernver}/build" -m644 vmlinux
+
+  # sed expression for following substitutions
+  local _subst="
+    s|%PKGBASE%|${pkgbase}|g
+    s|%KERNVER%|${_kernver}|g
+    s|%EXTRAMODULES%|${_extramodules}|g
+  "
+
+  # install mkinitcpio preset file
+  sed "${_subst}" ../linux.preset |
+    install -Dm644 /dev/stdin "${pkgdir}/etc/mkinitcpio.d/${pkgbase}.preset"
+
+  # install pacman hooks
+  sed "${_subst}" ../60-linux.hook |
+    install -Dm644 /dev/stdin "${pkgdir}/usr/share/libalpm/hooks/60-${pkgbase}.hook"
+  sed "${_subst}" ../90-linux.hook |
+    install -Dm644 /dev/stdin "${pkgdir}/usr/share/libalpm/hooks/90-${pkgbase}.hook"
+}
+
+_package-headers() {
+  pkgdesc="Header files and scripts for building modules for linux kernel - ${_desc}"
+  provides=("linux-headers=${pkgver}")
+  replaces=('linux-armv8-headers')
+  conflicts=('linux-headers')
+
+  cd ${_srcname}
+  local _builddir="${pkgdir}/usr/lib/modules/${_kernver}/build"
+
+  install -Dt "${_builddir}" -m644 Makefile .config Module.symvers
+  install -Dt "${_builddir}/kernel" -m644 kernel/Makefile
+
+  mkdir "${_builddir}/.tmp_versions"
+
+  cp -t "${_builddir}" -a include scripts
+
+  install -Dt "${_builddir}/arch/${KARCH}" -m644 arch/${KARCH}/Makefile
+  install -Dt "${_builddir}/arch/${KARCH}/kernel" -m644 arch/${KARCH}/kernel/asm-offsets.s
+
+  cp -t "${_builddir}/arch/${KARCH}" -a arch/${KARCH}/include
+  mkdir -p "${_builddir}/arch/arm"
+  cp -t "${_builddir}/arch/arm" -a arch/arm/include
+
+  install -Dt "${_builddir}/drivers/md" -m644 drivers/md/*.h
+  install -Dt "${_builddir}/net/mac80211" -m644 net/mac80211/*.h
+
+  # http://bugs.archlinux.org/task/13146
+  install -Dt "${_builddir}/drivers/media/i2c" -m644 drivers/media/i2c/msp3400-driver.h
+
+  # http://bugs.archlinux.org/task/20402
+  install -Dt "${_builddir}/drivers/media/usb/dvb-usb" -m644 drivers/media/usb/dvb-usb/*.h
+  install -Dt "${_builddir}/drivers/media/dvb-frontends" -m644 drivers/media/dvb-frontends/*.h
+  install -Dt "${_builddir}/drivers/media/tuners" -m644 drivers/media/tuners/*.h
+
+  # add xfs and shmem for aufs building
+  mkdir -p "${_builddir}"/{fs/xfs,mm}
+
+  # copy in Kconfig files
+  find . -name Kconfig\* -exec install -Dm644 {} "${_builddir}/{}" \;
+
+  # remove unneeded architectures
+  local _arch
+  for _arch in "${_builddir}"/arch/*/; do
+    [[ ${_arch} == */${KARCH}/ || ${_arch} == */arm/ ]] && continue
+    rm -r "${_arch}"
+  done
+
+  # remove files already in linux-docs package
+  rm -r "${_builddir}/Documentation"
+
+  # remove now broken symlinks
+  find -L "${_builddir}" -type l -printf 'Removing %P\n' -delete
+
+  # Fix permissions
+  chmod -R u=rwX,go=rX "${_builddir}"
+
+  # strip scripts directory
+  local _binary _strip
+  while read -rd '' _binary; do
+    case "$(file -bi "${_binary}")" in
+      *application/x-sharedlib*)  _strip="${STRIP_SHARED}"   ;; # Libraries (.so)
+      *application/x-archive*)    _strip="${STRIP_STATIC}"   ;; # Libraries (.a)
+      *application/x-executable*) _strip="${STRIP_BINARIES}" ;; # Binaries
+      *) continue ;;
+    esac
+    /usr/bin/strip ${_strip} "${_binary}"
+  done < <(find "${_builddir}/scripts" -type f -perm -u+w -print0 2>/dev/null)
+}
+
+pkgname=("${pkgbase}" "${pkgbase}-headers")
+for _p in ${pkgname[@]}; do
+  eval "package_${_p}() {
+    _package${_p#${pkgbase}}
+  }"
+done

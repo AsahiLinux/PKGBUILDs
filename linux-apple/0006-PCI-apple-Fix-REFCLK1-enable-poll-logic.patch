@@ -1,0 +1,42 @@
+From 73bc2835bf50821d38bd941f6b21e31d96ded6cf Mon Sep 17 00:00:00 2001
+From: Hector Martin <marcan@marcan.st>
+Date: Wed, 10 Nov 2021 16:40:28 +0900
+Subject: [PATCH 06/40] PCI: apple: Fix REFCLK1 enable/poll logic
+
+REFCLK1 has req/ack bits just like REFCLK0
+
+Signed-off-by: Hector Martin <marcan@marcan.st>
+---
+ drivers/pci/controller/pcie-apple.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
+index 1bf4d75b61be..e1b96c2e669a 100644
+--- a/drivers/pci/controller/pcie-apple.c
++++ b/drivers/pci/controller/pcie-apple.c
+@@ -42,8 +42,9 @@
+ #define   CORE_FABRIC_STAT_MASK		0x001F001F
+ #define CORE_LANE_CFG(port)		(0x84000 + 0x4000 * (port))
+ #define   CORE_LANE_CFG_REFCLK0REQ	BIT(0)
+-#define   CORE_LANE_CFG_REFCLK1		BIT(1)
++#define   CORE_LANE_CFG_REFCLK1REQ	BIT(1)
+ #define   CORE_LANE_CFG_REFCLK0ACK	BIT(2)
++#define   CORE_LANE_CFG_REFCLK1ACK	BIT(3)
+ #define   CORE_LANE_CFG_REFCLKEN	(BIT(9) | BIT(10))
+ #define CORE_LANE_CTL(port)		(0x84004 + 0x4000 * (port))
+ #define   CORE_LANE_CTL_CFGACC		BIT(15)
+@@ -482,9 +483,9 @@ static int apple_pcie_setup_refclk(struct apple_pcie *pcie,
+ 	if (res < 0)
+ 		return res;
+ 
+-	rmw_set(CORE_LANE_CFG_REFCLK1, pcie->base + CORE_LANE_CFG(port->idx));
++	rmw_set(CORE_LANE_CFG_REFCLK1REQ, pcie->base + CORE_LANE_CFG(port->idx));
+ 	res = readl_relaxed_poll_timeout(pcie->base + CORE_LANE_CFG(port->idx),
+-					 stat, stat & CORE_LANE_CFG_REFCLK1,
++					 stat, stat & CORE_LANE_CFG_REFCLK1ACK,
+ 					 100, 50000);
+ 
+ 	if (res < 0)
+-- 
+2.33.1
+

@@ -1,0 +1,29 @@
+From 73de1c719d3eeb5000c03218d4bc6126d86dbee5 Mon Sep 17 00:00:00 2001
+From: Hector Martin <marcan@marcan.st>
+Date: Wed, 10 Nov 2021 16:43:13 +0900
+Subject: [PATCH 07/40] PCI: apple: WIP: enable clock gating (?)
+
+Unclear what this does.
+
+Signed-off-by: Hector Martin <marcan@marcan.st>
+---
+ drivers/pci/controller/pcie-apple.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
+index e1b96c2e669a..f98551336b42 100644
+--- a/drivers/pci/controller/pcie-apple.c
++++ b/drivers/pci/controller/pcie-apple.c
+@@ -554,6 +554,9 @@ static int apple_pcie_setup_port(struct apple_pcie *pcie,
+ 		return ret;
+ 	}
+ 
++	rmw_clear(PORT_REFCLK_CGDIS, port->base + PORT_REFCLK);
++	rmw_clear(PORT_APPCLK_CGDIS, port->base + PORT_APPCLK);
++
+ 	ret = apple_pcie_port_setup_irq(port);
+ 	if (ret)
+ 		return ret;
+-- 
+2.33.1
+

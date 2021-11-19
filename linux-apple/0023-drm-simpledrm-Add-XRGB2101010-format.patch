@@ -1,0 +1,55 @@
+From e2e7fa084d42406212ff79ffd76849c62a92eac7 Mon Sep 17 00:00:00 2001
+From: Hector Martin <marcan@marcan.st>
+Date: Wed, 10 Nov 2021 23:36:42 +0900
+Subject: [PATCH 23/40] drm/simpledrm: Add XRGB2101010 format
+
+This is the format used by the bootloader framebuffer on Apple ARM64
+platforms.
+
+Signed-off-by: Hector Martin <marcan@marcan.st>
+---
+ drivers/gpu/drm/drm_format_helper.c | 6 +++---
+ drivers/gpu/drm/tiny/simpledrm.c    | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/gpu/drm/drm_format_helper.c b/drivers/gpu/drm/drm_format_helper.c
+index d1f6868f3aa1..e676921422b8 100644
+--- a/drivers/gpu/drm/drm_format_helper.c
++++ b/drivers/gpu/drm/drm_format_helper.c
+@@ -420,17 +420,17 @@ void drm_fb_xrgb8888_to_xrgb2101010_dstclip(void __iomem *dst,
+ 		return;
+ 
+ 	vaddr += clip_offset(clip, fb->pitches[0], sizeof(u32));
+-	dst += clip_offset(clip, dst_pitch, sizeof(u16));
++	dst += clip_offset(clip, dst_pitch, sizeof(u32));
+ 	for (y = 0; y < lines; y++) {
+ 		drm_fb_xrgb8888_to_xrgb2101010_line(dbuf, vaddr, linepixels);
+ 		memcpy_toio(dst, dbuf, dst_len);
+ 		vaddr += fb->pitches[0];
+-		dst += dst_len;
++		dst += dst_pitch;
+ 	}
+ 
+ 	kfree(dbuf);
+ }
+-EXPORT_SYMBOL(drm_fb_xrgb8888_to_rgb888_dstclip);
++EXPORT_SYMBOL(drm_fb_xrgb8888_to_xrgb2101010_dstclip);
+ 
+ /**
+  * drm_fb_xrgb8888_to_gray8 - Convert XRGB8888 to grayscale
+diff --git a/drivers/gpu/drm/tiny/simpledrm.c b/drivers/gpu/drm/tiny/simpledrm.c
+index 0d10ea59bc04..01433cc7a588 100644
+--- a/drivers/gpu/drm/tiny/simpledrm.c
++++ b/drivers/gpu/drm/tiny/simpledrm.c
+@@ -571,7 +571,7 @@ static const uint32_t simpledrm_default_formats[] = {
+ 	//DRM_FORMAT_XRGB1555,
+ 	//DRM_FORMAT_ARGB1555,
+ 	DRM_FORMAT_RGB888,
+-	//DRM_FORMAT_XRGB2101010,
++	DRM_FORMAT_XRGB2101010,
+ 	//DRM_FORMAT_ARGB2101010,
+ };
+ 
+-- 
+2.33.1
+
