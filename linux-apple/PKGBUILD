@@ -112,7 +112,48 @@ prepare() {
   cd "${srcdir}/${_srcname}"
 
   # ALARM patches
+  patch -p1 -i ../0001-pinctrl-apple-Always-return-valid-type-in-apple_gpio.patch
+  patch -p1 -i ../0002-irqchip-apple-aic-Add-support-for-AICv2.patch
+  patch -p1 -i ../0003-arm64-dts-apple-Add-initial-t6000-t6001-DTs.patch
+  patch -p1 -i ../0004-arm64-dts-apple-Add-J314-and-J316-devicetrees.patch
+  patch -p1 -i ../0005-fixup-arm64-dts-apple-Add-J314-and-J316-devicetrees.patch
+  patch -p1 -i ../0006-PCI-apple-Fix-REFCLK1-enable-poll-logic.patch
+  patch -p1 -i ../0007-PCI-apple-WIP-enable-clock-gating.patch
+  patch -p1 -i ../0008-dt-bindings-usb-Add-Apple-dwc3-bindings.patch
+  patch -p1 -i ../0009-usb-dwc3-Add-role-switch-reset-quirk-for-Apple-DWC3.patch
+  patch -p1 -i ../0010-usb-typec-tipd-Fix-typo-in-cd321x_switch_power_state.patch
+  patch -p1 -i ../0011-usb-typec-tipd-Fix-initialization-sequence-for-cd321.patch
+  patch -p1 -i ../0012-mmc-sdhci-pci-gli-GL9755-Support-for-CD-WP-inversion.patch
+  patch -p1 -i ../0013-mmc-sdhci-pci-gli-GL9755-Issue-8-16-bit-MMIO-reads-a.patch
+  patch -p1 -i ../0014-WIP-soc-apple-rtkit-Add-RTKit-library.patch
+  patch -p1 -i ../0015-dt-bindings-soc-apple-Add-Apple-SART-bindings.patch
+  patch -p1 -i ../0016-soc-apple-sart-Add-SART-driver.patch
+  patch -p1 -i ../0017-nvme-add-NVME_QUIRK_NO_SCAN_NS_LIST.patch
+  patch -p1 -i ../0018-WIP-nvme-Add-Apple-ANS2-NVMe-host-driver.patch
+  patch -p1 -i ../0019-arm64-dts-apple-Add-ANS2-nodes-to-t6001.dtsi.patch
+  patch -p1 -i ../0020-soc-apple-sart-Add-SARTv3-support.patch
+  patch -p1 -i ../0021-drm-format-helper-Add-drm_fb_xrgb8888_to_xrgb2101010.patch
+  patch -p1 -i ../0022-drm-simpledrm-Bind-to-OF-framebuffers-in-chosen.patch
+  patch -p1 -i ../0023-drm-simpledrm-Add-XRGB2101010-format.patch
+  patch -p1 -i ../0024-drm-format-helper-Fix-dst-computation-in-drm_fb_xrgb.patch
+  patch -p1 -i ../0025-io-pgtable-arm-Fix-table-descriptor-paddr-formatting.patch
+  patch -p1 -i ../0026-dt-bindings-iommu-dart-add-t6000-compatible.patch
+  patch -p1 -i ../0027-iommu-io-pgtable-Add-DART-subpage-protection-support.patch
+  patch -p1 -i ../0028-iommu-io-pgtable-Add-DART-PTE-support-for-t6000.patch
+  patch -p1 -i ../0029-iommu-dart-Support-t6000-variant.patch
+  patch -p1 -i ../0030-dt-bindings-watchdog-Add-Apple-Watchdog.patch
+  patch -p1 -i ../0031-watchdog-Add-Apple-SoC-watchdog-driver.patch
+  patch -p1 -i ../0032-arm64-dts-apple-t8103-Add-watchdog-node.patch
+  patch -p1 -i ../0033-arm64-dts-apple-add-watchdog-node.patch
+  patch -p1 -i ../0034-arm64-dts-apple-change-ethernet0-device-type-to-ethe.patch
+  patch -p1 -i ../0035-dt-bindings-arm-apple-Add-iMac-24-inch-2021-to-Apple.patch
+  patch -p1 -i ../0036-arm64-dts-apple-Add-missing-M1-t8103-devices.patch
+  patch -p1 -i ../0037-dt-bindings-i2c-apple-i2c-allow-multiple-compatibles.patch
+  patch -p1 -i ../0038-dt-bindings-i2c-apple-i2c-add-apple-t6000-i2c-compat.patch
+  patch -p1 -i ../0039-arm64-dts-apple-t8103-add-USB-C-related-nodes.patch
+  patch -p1 -i ../0040-arm64-dts-apple-add-interrupt-cells-property-to-pinc.patch
 
+  # copy config
   cat "${srcdir}/config" > ./.config
 
   # add pkgrel to extraversion
