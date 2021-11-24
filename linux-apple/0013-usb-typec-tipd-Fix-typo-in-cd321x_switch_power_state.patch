@@ -1,0 +1,28 @@
+From 2f69d10360532afabda159e8ecc9f8f14de4b3fc Mon Sep 17 00:00:00 2001
+From: Hector Martin <marcan@marcan.st>
+Date: Wed, 10 Nov 2021 19:38:21 +0900
+Subject: [PATCH 13/60] usb: typec: tipd: Fix typo in cd321x_switch_power_state
+
+SPSS -> SSPS
+
+Signed-off-by: Hector Martin <marcan@marcan.st>
+---
+ drivers/usb/typec/tipd/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/usb/typec/tipd/core.c b/drivers/usb/typec/tipd/core.c
+index fb8ef12bbe9c..4da5a0b2aed2 100644
+--- a/drivers/usb/typec/tipd/core.c
++++ b/drivers/usb/typec/tipd/core.c
+@@ -653,7 +653,7 @@ static int cd321x_switch_power_state(struct tps6598x *tps, u8 target_state)
+ 	if (state == target_state)
+ 		return 0;
+ 
+-	ret = tps6598x_exec_cmd(tps, "SPSS", sizeof(u8), &target_state, 0, NULL);
++	ret = tps6598x_exec_cmd(tps, "SSPS", sizeof(u8), &target_state, 0, NULL);
+ 	if (ret)
+ 		return ret;
+ 
+-- 
+2.34.0
+

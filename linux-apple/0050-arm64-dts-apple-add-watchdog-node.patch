@@ -1,0 +1,32 @@
+From 9dd64d7603f55483385050b72d7267907c9a3f82 Mon Sep 17 00:00:00 2001
+From: Janne Grunau <j@jannau.net>
+Date: Sun, 14 Nov 2021 09:56:43 +0100
+Subject: [PATCH 50/60] arm64: dts: apple: add watchdog node
+
+Signed-off-by: Janne Grunau <j@jannau.net>
+---
+ arch/arm64/boot/dts/apple/t6001.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/apple/t6001.dtsi b/arch/arm64/boot/dts/apple/t6001.dtsi
+index 3f5631cc962a..d86692535078 100644
+--- a/arch/arm64/boot/dts/apple/t6001.dtsi
++++ b/arch/arm64/boot/dts/apple/t6001.dtsi
+@@ -163,6 +163,14 @@ pmgr_mini: power-management@292280000 {
+ 			reg = <0x2 0x92280000 0 0x4000>;
+ 		};
+ 
++		wdt: watchdog@2922b0000 {
++			compatible = "apple,t6000-wdt", "apple,wdt";
++			reg = <0x2 0x922b0000 0x0 0x4000>;
++			clocks = <&clkref>;
++			interrupt-parent = <&aic>;
++			interrupts = <AIC_IRQ 0 631 IRQ_TYPE_LEVEL_HIGH>;
++		};
++
+ 		serial0: serial@39b200000 {
+ 			compatible = "apple,s5l-uart";
+ 			reg = <0x3 0x9b200000 0x0 0x1000>;
+-- 
+2.34.0
+

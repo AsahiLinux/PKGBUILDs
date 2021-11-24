@@ -1,0 +1,31 @@
+From 39d5b32b21a3421515631859646c6ee0270cd78c Mon Sep 17 00:00:00 2001
+From: Janne Grunau <j@jannau.net>
+Date: Sat, 20 Nov 2021 15:03:41 +0100
+Subject: [PATCH 53/60] arm64: dts: apple: j274: add alias for ethernet PCI
+ port
+
+The 10 gigabit ethernet Mac Mini model uses different PCI port
+properties. Most noteable it increases the "max-link-speed" from
+1 to 4 lanes. With this alias m1n1 will adjust the properties based on
+the apple device tree.
+
+Signed-off-by: Janne Grunau <j@jannau.net>
+---
+ arch/arm64/boot/dts/apple/t8103-j274.dts | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm64/boot/dts/apple/t8103-j274.dts b/arch/arm64/boot/dts/apple/t8103-j274.dts
+index 214476814797..1a5f6903ff7a 100644
+--- a/arch/arm64/boot/dts/apple/t8103-j274.dts
++++ b/arch/arm64/boot/dts/apple/t8103-j274.dts
+@@ -18,6 +18,7 @@ / {
+ 
+ 	aliases {
+ 		ethernet0 = &ethernet0;
++		port02 = &port02; /* adjust properties for the 10GE model */
+ 	};
+ };
+ 
+-- 
+2.34.0
+

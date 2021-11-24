@@ -1,0 +1,45 @@
+From 739a79b4b34b350ffd36b82c293078a1985c1c78 Mon Sep 17 00:00:00 2001
+From: Hector Martin <marcan@marcan.st>
+Date: Tue, 5 Oct 2021 23:24:21 +0900
+Subject: [PATCH 31/60] arm64: dts: apple: t8103: Rename clk24 to clkref
+
+We now know that this frequency comes from the external reference
+oscillator and is used for various SoC blocks, and isn't just a random
+24MHz clock, so let's call it something more appropriate.
+
+Reviewed-by: Mark Kettenis <kettenis@openbsd.org>
+Signed-off-by: Hector Martin <marcan@marcan.st>
+---
+ arch/arm64/boot/dts/apple/t8103.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/apple/t8103.dtsi b/arch/arm64/boot/dts/apple/t8103.dtsi
+index ea1b90fbf31a..029ea9ac7712 100644
+--- a/arch/arm64/boot/dts/apple/t8103.dtsi
++++ b/arch/arm64/boot/dts/apple/t8103.dtsi
+@@ -96,11 +96,11 @@ timer {
+ 			     <AIC_FIQ AIC_TMR_HV_VIRT IRQ_TYPE_LEVEL_HIGH>;
+ 	};
+ 
+-	clk24: clock-24m {
++	clkref: clock-ref {
+ 		compatible = "fixed-clock";
+ 		#clock-cells = <0>;
+ 		clock-frequency = <24000000>;
+-		clock-output-names = "clk24";
++		clock-output-names = "clkref";
+ 	};
+ 
+ 	soc {
+@@ -121,7 +121,7 @@ serial0: serial@235200000 {
+ 			 * TODO: figure out the clocking properly, there may
+ 			 * be a third selectable clock.
+ 			 */
+-			clocks = <&clk24>, <&clk24>;
++			clocks = <&clkref>, <&clkref>;
+ 			clock-names = "uart", "clk_uart_baud0";
+ 			status = "disabled";
+ 		};
+-- 
+2.34.0
+

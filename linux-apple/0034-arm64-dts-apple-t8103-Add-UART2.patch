@@ -1,0 +1,65 @@
+From 080190c624d2d6b6d1d759d5e70a5a1b4cc2056d Mon Sep 17 00:00:00 2001
+From: Hector Martin <marcan@marcan.st>
+Date: Mon, 20 Sep 2021 02:28:20 +0900
+Subject: [PATCH 34/60] arm64: dts: apple: t8103: Add UART2
+
+This UART is connected to the debug port of the WLAN module. It is
+mostly useless, but makes for a good test case for runtime-pm without
+having to unbind the console from the main system UART.
+
+Reviewed-by: Mark Kettenis <kettenis@openbsd.org>
+Signed-off-by: Hector Martin <marcan@marcan.st>
+---
+ arch/arm64/boot/dts/apple/t8103-j274.dts |  5 +++++
+ arch/arm64/boot/dts/apple/t8103.dtsi     | 12 ++++++++++++
+ 2 files changed, 17 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/apple/t8103-j274.dts b/arch/arm64/boot/dts/apple/t8103-j274.dts
+index 33a80f9501dc..86ea1b0a6cc8 100644
+--- a/arch/arm64/boot/dts/apple/t8103-j274.dts
++++ b/arch/arm64/boot/dts/apple/t8103-j274.dts
+@@ -17,6 +17,7 @@ / {
+ 
+ 	aliases {
+ 		serial0 = &serial0;
++		serial2 = &serial2;
+ 		ethernet0 = &ethernet0;
+ 	};
+ 
+@@ -45,6 +46,10 @@ &serial0 {
+ 	status = "okay";
+ };
+ 
++&serial2 {
++	status = "okay";
++};
++
+ /*
+  * Force the bus number assignments so that we can declare some of the
+  * on-board devices and properties that are populated by the bootloader
+diff --git a/arch/arm64/boot/dts/apple/t8103.dtsi b/arch/arm64/boot/dts/apple/t8103.dtsi
+index 58d42b340a05..a07c7d4d3e5d 100644
+--- a/arch/arm64/boot/dts/apple/t8103.dtsi
++++ b/arch/arm64/boot/dts/apple/t8103.dtsi
+@@ -127,6 +127,18 @@ serial0: serial@235200000 {
+ 			status = "disabled";
+ 		};
+ 
++		serial2: serial@235208000 {
++			compatible = "apple,s5l-uart";
++			reg = <0x2 0x35208000 0x0 0x1000>;
++			reg-io-width = <4>;
++			interrupt-parent = <&aic>;
++			interrupts = <AIC_IRQ 607 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&clkref>, <&clkref>;
++			clock-names = "uart", "clk_uart_baud0";
++			power-domains = <&ps_uart2>;
++			status = "disabled";
++		};
++
+ 		aic: interrupt-controller@23b100000 {
+ 			compatible = "apple,t8103-aic", "apple,aic";
+ 			#interrupt-cells = <3>;
+-- 
+2.34.0
+

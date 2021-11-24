@@ -1,0 +1,98 @@
+From 897558ecd78a36593c8a3bebf3169e1a6592806d Mon Sep 17 00:00:00 2001
+From: Janne Grunau <j@jannau.net>
+Date: Fri, 19 Nov 2021 23:11:35 +0100
+Subject: [PATCH 37/60] fixup! arm64: dts: apple: Add initial t6000/t6001 DTs
+
+Signed-off-by: Janne Grunau <j@jannau.net>
+---
+ arch/arm64/boot/dts/apple/t6001.dtsi | 18 +++++-------------
+ 1 file changed, 5 insertions(+), 13 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/apple/t6001.dtsi b/arch/arm64/boot/dts/apple/t6001.dtsi
+index e919f42fdf9a..3f5631cc962a 100644
+--- a/arch/arm64/boot/dts/apple/t6001.dtsi
++++ b/arch/arm64/boot/dts/apple/t6001.dtsi
+@@ -217,7 +217,7 @@ pcie_pins: pcie-pins {
+ 		};
+ 
+ 		i2c0: i2c@39b040000 {
+-			compatible = "apple,t8103-i2c";
++			compatible = "apple,t8103-i2c", "apple,i2c";
+ 			reg = <0x3 0x9b040000 0x0 0x4000>;
+ 			clocks = <&clkref>, <&clkref>;
+ 			clock-names = "gate", "ref";
+@@ -405,7 +405,7 @@ dwc3_0_dart_1: iommu@702f80000 {
+ 		};
+ 
+ 		dwc3_0: usb@702280000 {
+-			compatible = "apple,t6000,dwc3", "apple,dwc3", "snps,dwc3";
++			compatible = "apple,t6000-dwc3", "apple,dwc3", "snps,dwc3";
+ 			reg = <0x7 0x02280000 0x0 0x100000>;
+ 			interrupt-parent = <&aic>;
+ 			interrupts = <AIC_IRQ 0 1190 IRQ_TYPE_LEVEL_HIGH>;
+@@ -414,8 +414,6 @@ dwc3_0: usb@702280000 {
+ 			role-switch-default-mode = "host";
+ 			iommus = <&dwc3_0_dart_0 0>, <&dwc3_0_dart_1 1>;
+ 			power-domains = <&ps_atc0_usb>;
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+ 		};
+ 
+ 		dwc3_1_dart_0: iommu@b02f00000 {
+@@ -437,7 +435,7 @@ dwc3_1_dart_1: iommu@b02f80000 {
+ 		};
+ 
+ 		dwc3_1: usb@b02280000 {
+-			compatible = "apple,t6000,dwc3", "apple,dwc3", "snps,dwc3";
++			compatible = "apple,t6000-dwc3", "apple,dwc3", "snps,dwc3";
+ 			reg = <0xb 0x02280000 0x0 0x100000>;
+ 			interrupt-parent = <&aic>;
+ 			interrupts = <AIC_IRQ 0 1207 IRQ_TYPE_LEVEL_HIGH>;
+@@ -446,8 +444,6 @@ dwc3_1: usb@b02280000 {
+ 			role-switch-default-mode = "host";
+ 			iommus = <&dwc3_1_dart_0 0>, <&dwc3_1_dart_1 1>;
+ 			power-domains = <&ps_atc1_usb>;
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+ 		};
+ 
+ 		dwc3_2_dart_0: iommu@f02f00000 {
+@@ -469,7 +465,7 @@ dwc3_2_dart_1: iommu@f02f80000 {
+ 		};
+ 
+ 		dwc3_2: usb@f02280000 {
+-			compatible = "apple,t6000,dwc3", "apple,dwc3", "snps,dwc3";
++			compatible = "apple,t6000-dwc3", "apple,dwc3", "snps,dwc3";
+ 			reg = <0xf 0x02280000 0x0 0x100000>;
+ 			interrupt-parent = <&aic>;
+ 			interrupts = <AIC_IRQ 0 1224 IRQ_TYPE_LEVEL_HIGH>;
+@@ -478,8 +474,6 @@ dwc3_2: usb@f02280000 {
+ 			role-switch-default-mode = "host";
+ 			iommus = <&dwc3_2_dart_0 0>, <&dwc3_2_dart_1 1>;
+ 			power-domains = <&ps_atc2_usb>;
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+ 		};
+ 
+ 		dwc3_3_dart_0: iommu@1302f00000 {
+@@ -501,7 +495,7 @@ dwc3_3_dart_1: iommu@1302f80000 {
+ 		};
+ 
+ 		dwc3_3: usb@1302280000 {
+-			compatible = "apple,t6000,dwc3", "apple,dwc3", "snps,dwc3";
++			compatible = "apple,t6000-dwc3", "apple,dwc3", "snps,dwc3";
+ 			reg = <0x13 0x02280000 0x0 0x100000>;
+ 			interrupt-parent = <&aic>;
+ 			interrupts = <AIC_IRQ 0 1241 IRQ_TYPE_LEVEL_HIGH>;
+@@ -510,8 +504,6 @@ dwc3_3: usb@1302280000 {
+ 			role-switch-default-mode = "host";
+ 			iommus = <&dwc3_3_dart_0 0>, <&dwc3_3_dart_1 1>;
+ 			power-domains = <&ps_atc3_usb>;
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+ 		};
+ 
+ 		ans2_mbox: mbox@38f408000 {
+-- 
+2.34.0
+

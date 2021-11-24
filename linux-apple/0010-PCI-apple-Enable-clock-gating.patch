@@ -1,0 +1,30 @@
+From 0e089844310e78bc887f976ef5c81ca70ebcba02 Mon Sep 17 00:00:00 2001
+From: Hector Martin <marcan@marcan.st>
+Date: Wed, 10 Nov 2021 16:43:13 +0900
+Subject: [PATCH 10/60] PCI: apple: Enable clock gating
+
+These pokes are not required to make the PCIe port work, but it sounds
+like this should save some power at least.
+
+Signed-off-by: Hector Martin <marcan@marcan.st>
+---
+ drivers/pci/controller/pcie-apple.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
+index e1b96c2e669a..f98551336b42 100644
+--- a/drivers/pci/controller/pcie-apple.c
++++ b/drivers/pci/controller/pcie-apple.c
+@@ -554,6 +554,9 @@ static int apple_pcie_setup_port(struct apple_pcie *pcie,
+ 		return ret;
+ 	}
+ 
++	rmw_clear(PORT_REFCLK_CGDIS, port->base + PORT_REFCLK);
++	rmw_clear(PORT_APPCLK_CGDIS, port->base + PORT_APPCLK);
++
+ 	ret = apple_pcie_port_setup_irq(port);
+ 	if (ret)
+ 		return ret;
+-- 
+2.34.0
+

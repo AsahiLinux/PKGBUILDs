@@ -1,0 +1,68 @@
+From 969b43d562936c12c1186c170514bc7241c277f1 Mon Sep 17 00:00:00 2001
+From: Marc Zyngier <maz@kernel.org>
+Date: Tue, 23 Nov 2021 18:06:34 +0000
+Subject: [PATCH 57/60] PCI: apple: Follow the PCIe specifications when
+ resetting the port
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+While the Apple PCIe driver works correctly when directly booted
+from the firmware, it fails to initialise when the kernel is booted
+from a bootloader using PCIe such as u-boot.
+
+That's beacuse we're missing a proper reset of the port (we only
+clear the reset, but never assert it).
+
+The PCIe spec requirements are two-fold:
+
+- #PERST must be asserted before setting up the clocks, and
+  stay asserted for at least 100us (Tperst-clk).
+
+- Once #PERST is deasserted, the OS must wait for at least 100ms
+  "from the end of a Conventional Reset" before we can start talking
+  to the devices
+
+Implementing this results in a booting system.
+
+Fixes: 1e33888fbe44 ("PCI: apple: Add initial hardware bring-up")
+Acked-by: Pali Rohár <pali@kernel.org>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Cc: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+---
+ drivers/pci/controller/pcie-apple.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
+index d51cec10732e..f73003329f91 100644
+--- a/drivers/pci/controller/pcie-apple.c
++++ b/drivers/pci/controller/pcie-apple.c
+@@ -590,13 +590,23 @@ static int apple_pcie_setup_port(struct apple_pcie *pcie,
+ 
+ 	rmw_set(PORT_APPCLK_EN, port->base + PORT_APPCLK);
+ 
++	/* Engage #PERST before setting up the clock */
++	gpiod_set_value(reset, 0);
++
+ 	ret = apple_pcie_setup_refclk(pcie, port);
+ 	if (ret < 0)
+ 		return ret;
+ 
++	/* The minimal Tperst-clk value is 100us (PCIe CMS r2.0, 2.6.2) */
++	usleep_range(100, 200);
++
++	/* Deassert #PERST */
+ 	rmw_set(PORT_PERST_OFF, port->base + PORT_PERST);
+ 	gpiod_set_value(reset, 1);
+ 
++	/* Wait for 100ms after #PERST deassertion (PCIe r2.0, 6.6.1) */
++	msleep(100);
++
+ 	ret = readl_relaxed_poll_timeout(port->base + PORT_STATUS, stat,
+ 					 stat & PORT_STATUS_READY, 100, 250000);
+ 	if (ret < 0) {
+-- 
+2.34.0
+

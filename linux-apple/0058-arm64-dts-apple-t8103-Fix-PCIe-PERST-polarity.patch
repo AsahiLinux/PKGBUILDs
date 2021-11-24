@@ -1,0 +1,56 @@
+From 1cc5157bbae4173c19986f19ffcd24f3bdd1492f Mon Sep 17 00:00:00 2001
+From: Marc Zyngier <maz@kernel.org>
+Date: Tue, 23 Nov 2021 18:06:35 +0000
+Subject: [PATCH 58/60] arm64: dts: apple: t8103: Fix PCIe #PERST polarity
+
+As the name indicates, #PERST is active low. So fix the DT description
+to match the HW behaviour.
+
+Fixes: ff2a8d91d80c ("arm64: apple: Add PCIe node")
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+---
+ arch/arm64/boot/dts/apple/t8103.dtsi | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/apple/t8103.dtsi b/arch/arm64/boot/dts/apple/t8103.dtsi
+index 6921d413d2f0..b2615e09fbed 100644
+--- a/arch/arm64/boot/dts/apple/t8103.dtsi
++++ b/arch/arm64/boot/dts/apple/t8103.dtsi
+@@ -7,6 +7,7 @@
+  * Copyright The Asahi Linux Contributors
+  */
+ 
++#include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/interrupt-controller/apple-aic.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/pinctrl/apple.h>
+@@ -491,7 +492,7 @@ pcie0: pcie@690000000 {
+ 			port00: pci@0,0 {
+ 				device_type = "pci";
+ 				reg = <0x0 0x0 0x0 0x0 0x0>;
+-				reset-gpios = <&pinctrl_ap 152 0>;
++				reset-gpios = <&pinctrl_ap 152 GPIO_ACTIVE_LOW>;
+ 				max-link-speed = <2>;
+ 
+ 				#address-cells = <3>;
+@@ -511,7 +512,7 @@ port00: pci@0,0 {
+ 			port01: pci@1,0 {
+ 				device_type = "pci";
+ 				reg = <0x800 0x0 0x0 0x0 0x0>;
+-				reset-gpios = <&pinctrl_ap 153 0>;
++				reset-gpios = <&pinctrl_ap 153 GPIO_ACTIVE_LOW>;
+ 				max-link-speed = <2>;
+ 
+ 				#address-cells = <3>;
+@@ -531,7 +532,7 @@ port01: pci@1,0 {
+ 			port02: pci@2,0 {
+ 				device_type = "pci";
+ 				reg = <0x1000 0x0 0x0 0x0 0x0>;
+-				reset-gpios = <&pinctrl_ap 33 0>;
++				reset-gpios = <&pinctrl_ap 33 GPIO_ACTIVE_LOW>;
+ 				max-link-speed = <1>;
+ 
+ 				#address-cells = <3>;
+-- 
+2.34.0
+

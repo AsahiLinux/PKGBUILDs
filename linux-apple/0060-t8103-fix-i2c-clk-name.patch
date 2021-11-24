@@ -1,0 +1,62 @@
+From a9598dc495d17ee51f6ebf52c55d80a26f8ed941 Mon Sep 17 00:00:00 2001
+From: Janne Grunau <j@jannau.net>
+Date: Wed, 24 Nov 2021 21:12:44 +0100
+Subject: [PATCH 60/60] t8103: fix i2c clk name
+
+Signed-off-by: Janne Grunau <j@jannau.net>
+---
+ arch/arm64/boot/dts/apple/t8103.dtsi | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/apple/t8103.dtsi b/arch/arm64/boot/dts/apple/t8103.dtsi
+index b2615e09fbed..0fdd9945041a 100644
+--- a/arch/arm64/boot/dts/apple/t8103.dtsi
++++ b/arch/arm64/boot/dts/apple/t8103.dtsi
+@@ -115,7 +115,7 @@ soc {
+ 		i2c0: i2c@235010000 {
+ 			compatible = "apple,t8103-i2c", "apple,i2c";
+ 			reg = <0x2 0x35010000 0x0 0x4000>;
+-			clocks = <&clk24>;
++			clocks = <&clkref>;
+ 			power-domains = <&ps_i2c0>;
+ 			interrupt-parent = <&aic>;
+ 			interrupts = <AIC_IRQ 627 IRQ_TYPE_LEVEL_HIGH>;
+@@ -128,7 +128,7 @@ i2c0: i2c@235010000 {
+ 		i2c1: i2c@235014000 {
+ 			compatible = "apple,t8103-i2c", "apple,i2c";
+ 			reg = <0x2 0x35014000 0x0 0x4000>;
+-			clocks = <&clk24>;
++			clocks = <&clkref>;
+ 			power-domains = <&ps_i2c1>;
+ 			interrupt-parent = <&aic>;
+ 			interrupts = <AIC_IRQ 628 IRQ_TYPE_LEVEL_HIGH>;
+@@ -141,7 +141,7 @@ i2c1: i2c@235014000 {
+ 		i2c2: i2c@235018000 {
+ 			compatible = "apple,t8103-i2c", "apple,i2c";
+ 			reg = <0x2 0x35018000 0x0 0x4000>;
+-			clocks = <&clk24>;
++			clocks = <&clkref>;
+ 			power-domains = <&ps_i2c2>;
+ 			interrupt-parent = <&aic>;
+ 			interrupts = <AIC_IRQ 629 IRQ_TYPE_LEVEL_HIGH>;
+@@ -155,7 +155,7 @@ i2c2: i2c@235018000 {
+ 		i2c3: i2c@23501c000 {
+ 			compatible = "apple,t8103-i2c", "apple,i2c";
+ 			reg = <0x2 0x3501c000 0x0 0x4000>;
+-			clocks = <&clk24>;
++			clocks = <&clkref>;
+ 			power-domains = <&ps_i2c3>;
+ 			interrupt-parent = <&aic>;
+ 			interrupts = <AIC_IRQ 630 IRQ_TYPE_LEVEL_HIGH>;
+@@ -168,7 +168,7 @@ i2c3: i2c@23501c000 {
+ 		i2c4: i2c@235020000 {
+ 			compatible = "apple,t8103-i2c", "apple,i2c";
+ 			reg = <0x2 0x35020000 0x0 0x4000>;
+-			clocks = <&clk24>;
++			clocks = <&clkref>;
+ 			power-domains = <&ps_i2c4>;
+ 			interrupt-parent = <&aic>;
+ 			interrupts = <AIC_IRQ 631 IRQ_TYPE_LEVEL_HIGH>;
+-- 
+2.34.0
+

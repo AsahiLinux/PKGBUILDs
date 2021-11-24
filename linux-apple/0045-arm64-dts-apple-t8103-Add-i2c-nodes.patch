@@ -1,0 +1,154 @@
+From 0d96dacea5505237da581f549e9562001a0e08f0 Mon Sep 17 00:00:00 2001
+From: Janne Grunau <j@jannau.net>
+Date: Fri, 19 Nov 2021 19:35:57 +0100
+Subject: [PATCH 45/60] arm64: dts: apple: t8103: Add i2c nodes
+
+Apple M1 has at least 5 i2c controllers. i2c0, i2c1 and i2c3 are used
+on all M1 Mac devices. The 2020 Mac Mini uses i2c2 and the 13-inch
+MacBook Pro uses i2c2 and i2c4.
+
+Signed-off-by: Janne Grunau <j@jannau.net>
+Reviewed-by: Sven Peter <sven@svenpeter.dev>
+Acked-by: Hector Martin <marcan@marcan.st>
+---
+ arch/arm64/boot/dts/apple/t8103-j274.dts |  4 ++
+ arch/arm64/boot/dts/apple/t8103-j293.dts |  8 +++
+ arch/arm64/boot/dts/apple/t8103.dtsi     | 87 ++++++++++++++++++++++++
+ 3 files changed, 99 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/apple/t8103-j274.dts b/arch/arm64/boot/dts/apple/t8103-j274.dts
+index 9e01ef70039d..2cd429efba5b 100644
+--- a/arch/arm64/boot/dts/apple/t8103-j274.dts
++++ b/arch/arm64/boot/dts/apple/t8103-j274.dts
+@@ -39,3 +39,7 @@ ethernet0: ethernet@0,0 {
+ 		local-mac-address = [00 10 18 00 00 00];
+ 	};
+ };
++
++&i2c2 {
++	status = "okay";
++};
+diff --git a/arch/arm64/boot/dts/apple/t8103-j293.dts b/arch/arm64/boot/dts/apple/t8103-j293.dts
+index 466035f00b69..49cdf4b560a3 100644
+--- a/arch/arm64/boot/dts/apple/t8103-j293.dts
++++ b/arch/arm64/boot/dts/apple/t8103-j293.dts
+@@ -31,3 +31,11 @@ &pcie0_dart_2 {
+ 
+ /delete-node/ &port01;
+ /delete-node/ &port02;
++
++&i2c2 {
++	status = "okay";
++};
++
++&i2c4 {
++	status = "okay";
++};
+diff --git a/arch/arm64/boot/dts/apple/t8103.dtsi b/arch/arm64/boot/dts/apple/t8103.dtsi
+index e39b14971e68..9980db966e55 100644
+--- a/arch/arm64/boot/dts/apple/t8103.dtsi
++++ b/arch/arm64/boot/dts/apple/t8103.dtsi
+@@ -111,6 +111,68 @@ soc {
+ 		ranges;
+ 		nonposted-mmio;
+ 
++		i2c0: i2c@235010000 {
++			compatible = "apple,t8103-i2c", "apple,i2c";
++			reg = <0x2 0x35010000 0x0 0x4000>;
++			clocks = <&clk24>;
++			interrupt-parent = <&aic>;
++			interrupts = <AIC_IRQ 627 IRQ_TYPE_LEVEL_HIGH>;
++			pinctrl-0 = <&i2c0_pins>;
++			pinctrl-names = "default";
++			#address-cells = <0x1>;
++			#size-cells = <0x0>;
++		};
++
++		i2c1: i2c@235014000 {
++			compatible = "apple,t8103-i2c", "apple,i2c";
++			reg = <0x2 0x35014000 0x0 0x4000>;
++			clocks = <&clk24>;
++			interrupt-parent = <&aic>;
++			interrupts = <AIC_IRQ 628 IRQ_TYPE_LEVEL_HIGH>;
++			pinctrl-0 = <&i2c1_pins>;
++			pinctrl-names = "default";
++			#address-cells = <0x1>;
++			#size-cells = <0x0>;
++		};
++
++		i2c2: i2c@235018000 {
++			compatible = "apple,t8103-i2c", "apple,i2c";
++			reg = <0x2 0x35018000 0x0 0x4000>;
++			clocks = <&clk24>;
++			interrupt-parent = <&aic>;
++			interrupts = <AIC_IRQ 629 IRQ_TYPE_LEVEL_HIGH>;
++			pinctrl-0 = <&i2c2_pins>;
++			pinctrl-names = "default";
++			#address-cells = <0x1>;
++			#size-cells = <0x0>;
++			status = "disabled"; /* not used in all devices */
++		};
++
++		i2c3: i2c@23501c000 {
++			compatible = "apple,t8103-i2c", "apple,i2c";
++			reg = <0x2 0x3501c000 0x0 0x4000>;
++			clocks = <&clk24>;
++			interrupt-parent = <&aic>;
++			interrupts = <AIC_IRQ 630 IRQ_TYPE_LEVEL_HIGH>;
++			pinctrl-0 = <&i2c3_pins>;
++			pinctrl-names = "default";
++			#address-cells = <0x1>;
++			#size-cells = <0x0>;
++		};
++
++		i2c4: i2c@235020000 {
++			compatible = "apple,t8103-i2c", "apple,i2c";
++			reg = <0x2 0x35020000 0x0 0x4000>;
++			clocks = <&clk24>;
++			interrupt-parent = <&aic>;
++			interrupts = <AIC_IRQ 631 IRQ_TYPE_LEVEL_HIGH>;
++			pinctrl-0 = <&i2c4_pins>;
++			pinctrl-names = "default";
++			#address-cells = <0x1>;
++			#size-cells = <0x0>;
++			status = "disabled"; /* only used in J293 */
++		};
++
+ 		serial0: serial@235200000 {
+ 			compatible = "apple,s5l-uart";
+ 			reg = <0x2 0x35200000 0x0 0x1000>;
+@@ -175,6 +237,31 @@ pinctrl_ap: pinctrl@23c100000 {
+ 				     <AIC_IRQ 195 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <AIC_IRQ 196 IRQ_TYPE_LEVEL_HIGH>;
+ 
++			i2c0_pins: i2c0-pins {
++				pinmux = <APPLE_PINMUX(192, 1)>,
++					 <APPLE_PINMUX(188, 1)>;
++			};
++
++			i2c1_pins: i2c1-pins {
++				pinmux = <APPLE_PINMUX(201, 1)>,
++					 <APPLE_PINMUX(199, 1)>;
++			};
++
++			i2c2_pins: i2c2-pins {
++				pinmux = <APPLE_PINMUX(163, 1)>,
++					 <APPLE_PINMUX(162, 1)>;
++			};
++
++			i2c3_pins: i2c3-pins {
++				pinmux = <APPLE_PINMUX(73, 1)>,
++					 <APPLE_PINMUX(72, 1)>;
++			};
++
++			i2c4_pins: i2c4-pins {
++				pinmux = <APPLE_PINMUX(135, 1)>,
++					 <APPLE_PINMUX(134, 1)>;
++			};
++
+ 			pcie_pins: pcie-pins {
+ 				pinmux = <APPLE_PINMUX(150, 1)>,
+ 					 <APPLE_PINMUX(151, 1)>,
+-- 
+2.34.0
+

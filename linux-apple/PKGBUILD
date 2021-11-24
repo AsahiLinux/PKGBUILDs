@@ -4,7 +4,7 @@
 buildarch=8
 
 _rcver=5.16
-_rcrel=1
+_rcrel=2
 
 pkgbase=linux-apple
 _srcname=linux-${_rcver}-rc${_rcrel}
@@ -18,91 +18,131 @@ license=('GPL2')
 makedepends=('xmlto' 'docbook-xsl' 'kmod' 'inetutils' 'bc' 'git' 'dtc')
 options=('!strip')
 source=("https://git.kernel.org/torvalds/t/${_srcname}.tar.gz"
-        '0001-pinctrl-apple-Always-return-valid-type-in-apple_gpio.patch'
-        '0002-irqchip-apple-aic-Add-support-for-AICv2.patch'
-        '0003-arm64-dts-apple-Add-initial-t6000-t6001-DTs.patch'
-        '0004-arm64-dts-apple-Add-J314-and-J316-devicetrees.patch'
-        '0005-fixup-arm64-dts-apple-Add-J314-and-J316-devicetrees.patch'
-        '0006-PCI-apple-Fix-REFCLK1-enable-poll-logic.patch'
-        '0007-PCI-apple-WIP-enable-clock-gating.patch'
-        '0008-dt-bindings-usb-Add-Apple-dwc3-bindings.patch'
-        '0009-usb-dwc3-Add-role-switch-reset-quirk-for-Apple-DWC3.patch'
-        '0010-usb-typec-tipd-Fix-typo-in-cd321x_switch_power_state.patch'
-        '0011-usb-typec-tipd-Fix-initialization-sequence-for-cd321.patch'
-        '0012-mmc-sdhci-pci-gli-GL9755-Support-for-CD-WP-inversion.patch'
-        '0013-mmc-sdhci-pci-gli-GL9755-Issue-8-16-bit-MMIO-reads-a.patch'
-        '0014-WIP-soc-apple-rtkit-Add-RTKit-library.patch'
-        '0015-dt-bindings-soc-apple-Add-Apple-SART-bindings.patch'
-        '0016-soc-apple-sart-Add-SART-driver.patch'
-        '0017-nvme-add-NVME_QUIRK_NO_SCAN_NS_LIST.patch'
-        '0018-WIP-nvme-Add-Apple-ANS2-NVMe-host-driver.patch'
-        '0019-arm64-dts-apple-Add-ANS2-nodes-to-t6001.dtsi.patch'
-        '0020-soc-apple-sart-Add-SARTv3-support.patch'
-        '0021-drm-format-helper-Add-drm_fb_xrgb8888_to_xrgb2101010.patch'
-        '0022-drm-simpledrm-Bind-to-OF-framebuffers-in-chosen.patch'
-        '0023-drm-simpledrm-Add-XRGB2101010-format.patch'
-        '0024-drm-format-helper-Fix-dst-computation-in-drm_fb_xrgb.patch'
-        '0025-io-pgtable-arm-Fix-table-descriptor-paddr-formatting.patch'
-        '0026-dt-bindings-iommu-dart-add-t6000-compatible.patch'
-        '0027-iommu-io-pgtable-Add-DART-subpage-protection-support.patch'
-        '0028-iommu-io-pgtable-Add-DART-PTE-support-for-t6000.patch'
-        '0029-iommu-dart-Support-t6000-variant.patch'
-        '0030-dt-bindings-watchdog-Add-Apple-Watchdog.patch'
-        '0031-watchdog-Add-Apple-SoC-watchdog-driver.patch'
-        '0032-arm64-dts-apple-t8103-Add-watchdog-node.patch'
-        '0033-arm64-dts-apple-add-watchdog-node.patch'
-        '0034-arm64-dts-apple-change-ethernet0-device-type-to-ethe.patch'
-        '0035-dt-bindings-arm-apple-Add-iMac-24-inch-2021-to-Apple.patch'
-        '0036-arm64-dts-apple-Add-missing-M1-t8103-devices.patch'
-        '0037-dt-bindings-i2c-apple-i2c-allow-multiple-compatibles.patch'
-        '0038-dt-bindings-i2c-apple-i2c-add-apple-t6000-i2c-compat.patch'
-        '0039-arm64-dts-apple-t8103-add-USB-C-related-nodes.patch'
-        '0040-arm64-dts-apple-add-interrupt-cells-property-to-pinc.patch'
+        '0001-dt-bindings-iommu-dart-add-t6000-compatible.patch'
+        '0002-iommu-io-pgtable-Add-DART-subpage-protection-support.patch'
+        '0003-iommu-io-pgtable-Add-DART-PTE-support-for-t6000.patch'
+        '0004-iommu-dart-Support-t6000-variant.patch'
+        '0005-irqchip-apple-aic-Add-support-for-AICv2.patch'
+        '0006-arm64-dts-apple-Add-initial-t6000-t6001-DTs.patch'
+        '0007-arm64-dts-apple-Add-J314-and-J316-devicetrees.patch'
+        '0008-io-pgtable-arm-Fix-table-descriptor-paddr-formatting.patch'
+        '0009-PCI-apple-Fix-REFCLK1-enable-poll-logic.patch'
+        '0010-PCI-apple-Enable-clock-gating.patch'
+        '0011-dt-bindings-usb-Add-Apple-dwc3-bindings.patch'
+        '0012-usb-dwc3-Add-role-switch-reset-quirk-for-Apple-DWC3.patch'
+        '0013-usb-typec-tipd-Fix-typo-in-cd321x_switch_power_state.patch'
+        '0014-usb-typec-tipd-Fix-initialization-sequence-for-cd321.patch'
+        '0015-mmc-sdhci-pci-gli-GL9755-Support-for-CD-WP-inversion.patch'
+        '0016-mmc-sdhci-pci-gli-GL9755-Issue-8-16-bit-MMIO-reads-a.patch'
+        '0017-WIP-soc-apple-rtkit-Add-RTKit-library.patch'
+        '0018-dt-bindings-soc-apple-Add-Apple-SART-bindings.patch'
+        '0019-soc-apple-sart-Add-SART-driver.patch'
+        '0020-nvme-add-NVME_QUIRK_NO_SCAN_NS_LIST.patch'
+        '0021-WIP-nvme-Add-Apple-ANS2-NVMe-host-driver.patch'
+        '0022-arm64-dts-apple-Add-ANS2-nodes-to-t6001.dtsi.patch'
+        '0023-soc-apple-sart-Add-SARTv3-support.patch'
+        '0024-drm-format-helper-Add-drm_fb_xrgb8888_to_xrgb2101010.patch'
+        '0025-drm-simpledrm-Bind-to-OF-framebuffers-in-chosen.patch'
+        '0026-drm-simpledrm-Add-XRGB2101010-format.patch'
+        '0027-drm-format-helper-Fix-dst-computation-in-drm_fb_xrgb.patch'
+        '0028-dt-bindings-power-Add-apple-pmgr-pwrstate-binding.patch'
+        '0029-dt-bindings-arm-apple-Add-apple-pmgr-binding.patch'
+        '0030-soc-apple-Add-driver-for-Apple-PMGR-power-state-cont.patch'
+        '0031-arm64-dts-apple-t8103-Rename-clk24-to-clkref.patch'
+        '0032-arm64-dts-apple-t8103-Add-PMGR-nodes.patch'
+        '0033-tty-serial-samsung_tty-Support-runtime-PM.patch'
+        '0034-arm64-dts-apple-t8103-Add-UART2.patch'
+        '0035-arm64-dts-apple-t600x-Add-PMGR-nodes.patch'
+        '0036-PCI-apple-Configure-link-speeds-properly.patch'
+        '0037-fixup-arm64-dts-apple-Add-initial-t6000-t6001-DTs.patch'
+        '0038-fixup-arm64-dts-apple-Add-J314-and-J316-devicetrees.patch'
+        '0039-fixup-arm64-dts-apple-Add-J314-and-J316-devicetrees.patch'
+        '0040-arm64-dts-apple-change-ethernet0-device-type-to-ethe.patch'
+        '0041-dt-bindings-i2c-apple-i2c-allow-multiple-compatibles.patch'
+        '0042-arm64-dts-apple-add-interrupt-cells-property-to-pinc.patch'
+        '0043-dt-bindings-arm-apple-Add-iMac-24-inch-2021-to-Apple.patch'
+        '0044-arm64-dts-apple-Add-missing-M1-t8103-devices.patch'
+        '0045-arm64-dts-apple-t8103-Add-i2c-nodes.patch'
+        '0046-arm64-dts-apple-t8103-Add-cd321x-nodes.patch'
+        '0047-dt-bindings-watchdog-Add-Apple-Watchdog.patch'
+        '0048-watchdog-Add-Apple-SoC-watchdog-driver.patch'
+        '0049-arm64-dts-apple-t8103-Add-watchdog-node.patch'
+        '0050-arm64-dts-apple-add-watchdog-node.patch'
+        '0051-dt-bindings-i2c-apple-i2c-add-apple-t6000-i2c-compat.patch'
+        '0052-arm64-dts-apple-t8103-Add-USB-C-related-nodes.patch'
+        '0053-arm64-dts-apple-j274-add-alias-for-ethernet-PCI-port.patch'
+        '0054-fixup-arm64-dts-apple-Add-missing-M1-t8103-devices.patch'
+        '0055-fixup-arm64-dts-apple-t8103-Add-i2c-and-cd321x-nodes.patch'
+        '0056-fixup-arm64-dts-apple-t8103-Add-USB-C-related-nodes.patch'
+        '0057-PCI-apple-Follow-the-PCIe-specifications-when-resett.patch'
+        '0058-arm64-dts-apple-t8103-Fix-PCIe-PERST-polarity.patch'
+        '0059-PCI-apple-Fix-PERST-polarity.patch'
+        '0060-t8103-fix-i2c-clk-name.patch'
         'config'
         'linux.preset'
         '60-linux.hook'
         '90-linux.hook')
-sha256sums=('f15cb8ed94671ac2e094380b429bafdab04f44bc3f29cca0b050ee2370a21d2c'
-            '5124200a36c308c4a82b31a1a3f801a214f36391277b2df7af0ce5a7e66d9e43'
-            '37f559cd276f412fb53610e1619ae15ca32910ca473694fe6995d7826fff818d'
-            '5ec15a773e91d5444eaff2df4a8f69fe0c392b2ddfb659b54941778b80f792b4'
-            'fa4fbcbd1faf7c7de8dfbf9b04fa465a05672883c950ee3cd09128ccb6602b40'
-            '5d480eacd3ef5eb05ef412454728f7a311c805dd6679fe2905a87a94b4a3a19b'
-            '7b616a00df4daa211c67e1fea228898f1acf699c984fbdf7814d9038fc2a61a2'
-            '17c0fb2b79caccac3f30933acd9b6270a0c235586100ee019b04944e97846cb6'
-            'e64db187374af6e4b00755debe3da2eeca267057d02231e5b23c36860ce46871'
-            'c2dc229437a411ca93d9abc2b5bc6e298f3f2bf300a1df831d64048ffe619771'
-            '9327691e251c10efcb9c6c8999b4c6e07b7bd9459c50d4010c85b347ce1fc1f3'
-            'afd2697867014a4cb6b86d86dd23004752cfd9991ea80faeb4c1dacff0a8708a'
-            'ddbca9e75e5c2d29f6975352a19de7de3654ae259a9adda057bc643014f554be'
-            '96d157be28db5ccc61139ff6fd2cf40a789729e515ca0d2849a72307aed784c3'
-            '6998b9a06940137ca1cdbf4424341d5a72659b528198043d9b4e14824258f4ee'
-            '3e171b90a33c2467912e654e552d401cf72693c54e271db0e085400ee50a03fb'
-            '7765275a1595e2fe827de1cdfcf5684e48809ad063e9648cf6fc7485ce1f11c1'
-            '6d41adf5d11dfee74e3ce7b8fa5fabdc67b040bceeda690e978fea7a97a8b254'
-            'c77cac447459a6bea4793770eec10b04e39fce02f00939e600123a77a3d5d731'
-            '504fb853bef7f24dd437acafe012307108b3982e93dd243dc03a900698b73547'
-            '7f3e3455f0532cd93b2273b0034f752a6164eb58ce48ab6378332b01712c8273'
-            '097c0bb4262259b2ccf840790a3c9d9fc340ed78bbe459c984fa70e1c28d746f'
-            '2c933cab055603cd1ff6de5517f9c93908acfce0e75b39ef71e00d925f145c1e'
-            '8134f5092043b652827593139bffdb2b239d8d96c521fc62cfbdc7e84f2c8f2f'
-            '40a99e17909fb9cd674bce7a2a7858c86ed67cce7b09c052de870e8590d7cbaa'
-            '30a6b94356b44516e6149b59e844e7fa7ad3b84011c45b0c68843f19b834e572'
-            'c6e57106d866974f7441fa54610fc219e164eb8c748125a3169ecac96f498896'
-            '20817950d75fc234f7b4d96172b2afc1d188e1c55551864a09a2497a80c45fe0'
-            '051fd38ad92b2ea4d9c2be19333d07073abee249c98ed8484fa538dba0348d25'
-            '70e598341ba50f3e51fde8975d18f8b6e202811ce45b582eb37b32a174c599ab'
-            '668ec724dc09afd0731136c04dcf6ffc78bf4b9a137f9f07e340611f8e965bfa'
-            'c680f2a8fe68ca177c99210fd3a9288b8d667f9548a27458220a4ea3d19c33c0'
-            '823a2288d339d0013de14471221268444a458d60a9cceeb38b9655becbc33b98'
-            'de897754ddbac5fbf3c50742768595f0555955a2ffe269d1de687a96c8410a6b'
-            '39c213fef66c10209dc3760286c869319599c9669ef2c1421979665bf1bcb43d'
-            'be87628c3d8e13e2f8d4ff82a493aee9bd61ce85441360aa78bfe8a95cd98c2b'
-            '97cd72f6470497eb2c1b98b1fa383ce2bc62eb46e6233dae9614a341cafdfd7f'
-            '1a5102e1cfcdbcf3a215a995f8cfddf945007ce70d9d010d3e486ff6ea138f56'
-            'f29d30b3dba6e56aa674ec72216e0d549672a038c956b0d3db1443cd10d3f563'
-            '463cbf852fe2bfaf04c4b01380974fb9d4832a43f39e9ceca39cae5db11361d1'
-            'bdb0a466bb75ae2d37ac31ef6e26667623c413dad4d4d8e58fc3d9b1e23666f7'
+sha256sums=('90be486cc939f008d40c8217e5e9bbd3dd0e0a998440214573a128295fb0dd80'
+            '001a56347406704d836cecb2dd69295e8a1841e75747e5e1f4ec628b66159a43'
+            'd239b316eeaa142b8abaea7a8933d152d31dd5331c58371563cf9270aecb72cd'
+            '007e5e237d344c68982a8a8cf9976e1fe884f0ff59a6cdfe2290bcdffae1adad'
+            'db18763a8d7d03d9a251acd88b83797a182e2f71d447c33632702104c1e2d1cf'
+            '35f572c9846b484a8a61561dc6af89268a34c66f59437253842bd867b056da75'
+            'a8ed535da43d95d6ab7f6fb263efac145f49ce6a01411f7a330043dc059b149d'
+            'c2d315fb1d47a134a1c584194ef83f9dce7d08af36ca1e276d4b77669b9b592b'
+            '1438d6b01d7a0a8acdc36c75f059d947f19837d00702351e99623917d2adb74b'
+            '273e77e803895753e2ffd98626e190af5b2157d531c15f814b98de9be80a5113'
+            '359acdc5c493b90ba1caf6a3f4bfcbde63cdecb1a49aeca4e8f678b90500db32'
+            '50f226f4a2684aa745a6e46e8db8092cb49cab314817605703e5ce473f3d61bb'
+            '50bf1392c80b525fe9703135d7c935eeddec847056e18a2d50a5883f5860faf8'
+            '6565937068088a04536e555327fd56b2bade110950ddff342bec17cffe9b5bab'
+            '241a149f109a0de93d3135566c12c573c51aa2722feb176f725e13ca5a3fd1ed'
+            '624887534a821ccb30ee4bc7c9ca6bb68bbdeff19973627b03fdaf93e3d2c01a'
+            '805ca31fee7696ffdc7e11adfe106ebc44eb51c85bc677ebcf8109125a9d22c0'
+            'e074b546aca52e1d138eda7e7bd381204eb106dcb2c4f90154ede8383576e958'
+            'f09f01c317fe40475be236a95ad71b5bddb53269264ab50c19badb5981d6ef7e'
+            '6a519d3208b6553d32e90274d233d7cb8dd72ade42ea121e2b5ab9cb8e061757'
+            'b05972f5575445eb3eb2370a9a6609d54ba47497c79491d3503d1bf489bf7825'
+            '441d77332f9d90b1831901255f6c26f0402a46c42f94b866fd110c2e73b4a90f'
+            '7ccc8c79620753287db848b85d83fa7e3bc889d321fbccbe4334719f13543647'
+            'b765be7e99e885c7690ed7d023a7cf351468b8d8c34f80791a38103658fe1891'
+            '0c67ca744f1f7e342eefcc8f562a09341af32d023c7f653e3ea448bab6253041'
+            '1d47b83bf81ec495f692ad0c7807bdbd4eb48a4bf9582210f4756d4457ea6ae8'
+            '9c59d34fc54dfd857686be18ccb9099443801ec3663ad9b484fd3b7bcc7e2004'
+            '52312d0b391302d17cfb7e9679a379178ca8cfe5cd2a5a66357d73c9257a1ef3'
+            '3d41c7266027b23dc136208d39e1e4002340c9dbe47c32feee8e4605252f4c06'
+            'da19ad675d0f332efa6c8190da87c5fa37179c044c5b7d8200513d84399ce564'
+            'bfca7d604080253c542355d88d03b741215abcc2f26b0d66359a9cc472c2c528'
+            '0ea50e159298d51646fc8bc966e353412d6998cb3a1daf732ce91926161d8677'
+            '04e10ec3af4a205398da91b023876dc9b57e137282608689c003d4c6a1cdcf72'
+            '88a0bbd32b42f9329d155ef76ebb8b43360f7034be8ea16672f1cf63a5864809'
+            '7f44a63c1312bc2e6e8fc1d8c0f2ca1fdd0082d0e7763e0d6a3ecbe6600ce35a'
+            'e835233e076eafd61265849d2ec3259129e1be9f094405ef651b196d46ab1e79'
+            '31e688668e4c5ccabf2dac4989c548517f671d40375ea48fe2dc21ec5ab100c2'
+            '870dfb02379becc0f804b94af4fe16bd54ef11f17c0575a02926d84faabf4192'
+            'e97ccf1835aeeabdac147baa2ac6aa2be6504c3d9ebd68f3e7847c9e7b318a4e'
+            '9a128a91668012847571b31a19caa60ba7985015f989960f2658f4b3e010c147'
+            '9f37d449ee0e1689715288835f4b0aeec930c35beed459846c82408bb94ae9a1'
+            'ba260ae594720270ae26ed890d151b34bc721f7f37fd698a24c8feedeec4bf7d'
+            'fd8a2e95b45724d824ccc099664a4a1da604b8d60311f92cc0cbc9d0766ce9f4'
+            '8a4100a770c533e130a4551cf34cd4c37885127a6124d247bedeef2ae37b99bd'
+            '654a50aaf2b79d06d85368d921123d9be2ae965b37bf37b90a1934fe02a612ef'
+            '1bc2a340c8e9c89b42de3b4af5e7e88cf7b8a8f5529238613a5dec3a8a78ccc5'
+            '172343d8ec1bed1a34f9e34b1e6298f7bb45508aa390f780c0bd7f9ae659364c'
+            '935219a21c5a8815f877c6171b2be06beb528e3714efa92be39fe154df893e67'
+            'e81abc76ce5977f01f25dc4fdf27b8dbb8b5f128da38ddefda9867e27b31b220'
+            '636c7b87988e03f86d2ef4d481c5c157d18386061ef13713b344ac0d170371d0'
+            'aef9e415f6b3f5ed25fe05fd7ee196e157b61af5d996f078891881fb359e4fda'
+            '5f969e0f5ea1e5d2451ac0050d65cd88e48fe573073f514f25e78f35a82b5e1e'
+            'ff554f50656fba3bb3abf6d1efb8431e6e92e32172d48cfd1f26ae26d6ca41b1'
+            '796bd7cc67c45ff8fdce5df771f9743352d6f2478cea36c9cb5f75963c65757e'
+            'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'
+            '8ad6086c8b56441d02b5e98f87f5b25ef2145082b109d941d1bc133c6e3a1156'
+            'a78cdaef56965a82639fbfafc0058bec1db73ab194e1569533f69f6c5ac0cd6c'
+            'a19ae32bf060aef13e236920651c6174d150e832e7dd9c67f0bde05fe249b26a'
+            '40625168e68394220a399783750d0b9dd961fb8148ba2135c7f06c481b647c4d'
+            'ddba239bd568dfc7ca39d3726264df24fa5f9260c76da507f4b9c8770174b269'
+            '1a3edab693808fda01de4216034674f20f8d9b8f6fa04c511e5d095777bbef31'
             '7159ce0336cb0ed15a7ea813f37f50ee73e62906d94fe4cbac233b7a24c02008'
             '6837b3e2152f142f3fff595c6cbd03423f6e7b8d525aac8ae3eb3b58392bd255'
             'ae2e95db94ef7176207c690224169594d49445e04249d2499e9d2fbc117a0b21'
@@ -112,46 +152,66 @@ prepare() {
   cd "${srcdir}/${_srcname}"
 
   # ALARM patches
-  patch -p1 -i ../0001-pinctrl-apple-Always-return-valid-type-in-apple_gpio.patch
-  patch -p1 -i ../0002-irqchip-apple-aic-Add-support-for-AICv2.patch
-  patch -p1 -i ../0003-arm64-dts-apple-Add-initial-t6000-t6001-DTs.patch
-  patch -p1 -i ../0004-arm64-dts-apple-Add-J314-and-J316-devicetrees.patch
-  patch -p1 -i ../0005-fixup-arm64-dts-apple-Add-J314-and-J316-devicetrees.patch
-  patch -p1 -i ../0006-PCI-apple-Fix-REFCLK1-enable-poll-logic.patch
-  patch -p1 -i ../0007-PCI-apple-WIP-enable-clock-gating.patch
-  patch -p1 -i ../0008-dt-bindings-usb-Add-Apple-dwc3-bindings.patch
-  patch -p1 -i ../0009-usb-dwc3-Add-role-switch-reset-quirk-for-Apple-DWC3.patch
-  patch -p1 -i ../0010-usb-typec-tipd-Fix-typo-in-cd321x_switch_power_state.patch
-  patch -p1 -i ../0011-usb-typec-tipd-Fix-initialization-sequence-for-cd321.patch
-  patch -p1 -i ../0012-mmc-sdhci-pci-gli-GL9755-Support-for-CD-WP-inversion.patch
-  patch -p1 -i ../0013-mmc-sdhci-pci-gli-GL9755-Issue-8-16-bit-MMIO-reads-a.patch
-  patch -p1 -i ../0014-WIP-soc-apple-rtkit-Add-RTKit-library.patch
-  patch -p1 -i ../0015-dt-bindings-soc-apple-Add-Apple-SART-bindings.patch
-  patch -p1 -i ../0016-soc-apple-sart-Add-SART-driver.patch
-  patch -p1 -i ../0017-nvme-add-NVME_QUIRK_NO_SCAN_NS_LIST.patch
-  patch -p1 -i ../0018-WIP-nvme-Add-Apple-ANS2-NVMe-host-driver.patch
-  patch -p1 -i ../0019-arm64-dts-apple-Add-ANS2-nodes-to-t6001.dtsi.patch
-  patch -p1 -i ../0020-soc-apple-sart-Add-SARTv3-support.patch
-  patch -p1 -i ../0021-drm-format-helper-Add-drm_fb_xrgb8888_to_xrgb2101010.patch
-  patch -p1 -i ../0022-drm-simpledrm-Bind-to-OF-framebuffers-in-chosen.patch
-  patch -p1 -i ../0023-drm-simpledrm-Add-XRGB2101010-format.patch
-  patch -p1 -i ../0024-drm-format-helper-Fix-dst-computation-in-drm_fb_xrgb.patch
-  patch -p1 -i ../0025-io-pgtable-arm-Fix-table-descriptor-paddr-formatting.patch
-  patch -p1 -i ../0026-dt-bindings-iommu-dart-add-t6000-compatible.patch
-  patch -p1 -i ../0027-iommu-io-pgtable-Add-DART-subpage-protection-support.patch
-  patch -p1 -i ../0028-iommu-io-pgtable-Add-DART-PTE-support-for-t6000.patch
-  patch -p1 -i ../0029-iommu-dart-Support-t6000-variant.patch
-  patch -p1 -i ../0030-dt-bindings-watchdog-Add-Apple-Watchdog.patch
-  patch -p1 -i ../0031-watchdog-Add-Apple-SoC-watchdog-driver.patch
-  patch -p1 -i ../0032-arm64-dts-apple-t8103-Add-watchdog-node.patch
-  patch -p1 -i ../0033-arm64-dts-apple-add-watchdog-node.patch
-  patch -p1 -i ../0034-arm64-dts-apple-change-ethernet0-device-type-to-ethe.patch
-  patch -p1 -i ../0035-dt-bindings-arm-apple-Add-iMac-24-inch-2021-to-Apple.patch
-  patch -p1 -i ../0036-arm64-dts-apple-Add-missing-M1-t8103-devices.patch
-  patch -p1 -i ../0037-dt-bindings-i2c-apple-i2c-allow-multiple-compatibles.patch
-  patch -p1 -i ../0038-dt-bindings-i2c-apple-i2c-add-apple-t6000-i2c-compat.patch
-  patch -p1 -i ../0039-arm64-dts-apple-t8103-add-USB-C-related-nodes.patch
-  patch -p1 -i ../0040-arm64-dts-apple-add-interrupt-cells-property-to-pinc.patch
+  patch -p1 -i ../0001-dt-bindings-iommu-dart-add-t6000-compatible.patch
+  patch -p1 -i ../0002-iommu-io-pgtable-Add-DART-subpage-protection-support.patch
+  patch -p1 -i ../0003-iommu-io-pgtable-Add-DART-PTE-support-for-t6000.patch
+  patch -p1 -i ../0004-iommu-dart-Support-t6000-variant.patch
+  patch -p1 -i ../0005-irqchip-apple-aic-Add-support-for-AICv2.patch
+  patch -p1 -i ../0006-arm64-dts-apple-Add-initial-t6000-t6001-DTs.patch
+  patch -p1 -i ../0007-arm64-dts-apple-Add-J314-and-J316-devicetrees.patch
+  patch -p1 -i ../0008-io-pgtable-arm-Fix-table-descriptor-paddr-formatting.patch
+  patch -p1 -i ../0009-PCI-apple-Fix-REFCLK1-enable-poll-logic.patch
+  patch -p1 -i ../0010-PCI-apple-Enable-clock-gating.patch
+  patch -p1 -i ../0011-dt-bindings-usb-Add-Apple-dwc3-bindings.patch
+  patch -p1 -i ../0012-usb-dwc3-Add-role-switch-reset-quirk-for-Apple-DWC3.patch
+  patch -p1 -i ../0013-usb-typec-tipd-Fix-typo-in-cd321x_switch_power_state.patch
+  patch -p1 -i ../0014-usb-typec-tipd-Fix-initialization-sequence-for-cd321.patch
+  patch -p1 -i ../0015-mmc-sdhci-pci-gli-GL9755-Support-for-CD-WP-inversion.patch
+  patch -p1 -i ../0016-mmc-sdhci-pci-gli-GL9755-Issue-8-16-bit-MMIO-reads-a.patch
+  patch -p1 -i ../0017-WIP-soc-apple-rtkit-Add-RTKit-library.patch
+  patch -p1 -i ../0018-dt-bindings-soc-apple-Add-Apple-SART-bindings.patch
+  patch -p1 -i ../0019-soc-apple-sart-Add-SART-driver.patch
+  patch -p1 -i ../0020-nvme-add-NVME_QUIRK_NO_SCAN_NS_LIST.patch
+  patch -p1 -i ../0021-WIP-nvme-Add-Apple-ANS2-NVMe-host-driver.patch
+  patch -p1 -i ../0022-arm64-dts-apple-Add-ANS2-nodes-to-t6001.dtsi.patch
+  patch -p1 -i ../0023-soc-apple-sart-Add-SARTv3-support.patch
+  patch -p1 -i ../0024-drm-format-helper-Add-drm_fb_xrgb8888_to_xrgb2101010.patch
+  patch -p1 -i ../0025-drm-simpledrm-Bind-to-OF-framebuffers-in-chosen.patch
+  patch -p1 -i ../0026-drm-simpledrm-Add-XRGB2101010-format.patch
+  patch -p1 -i ../0027-drm-format-helper-Fix-dst-computation-in-drm_fb_xrgb.patch
+  patch -p1 -i ../0028-dt-bindings-power-Add-apple-pmgr-pwrstate-binding.patch
+  patch -p1 -i ../0029-dt-bindings-arm-apple-Add-apple-pmgr-binding.patch
+  patch -p1 -i ../0030-soc-apple-Add-driver-for-Apple-PMGR-power-state-cont.patch
+  patch -p1 -i ../0031-arm64-dts-apple-t8103-Rename-clk24-to-clkref.patch
+  patch -p1 -i ../0032-arm64-dts-apple-t8103-Add-PMGR-nodes.patch
+  patch -p1 -i ../0033-tty-serial-samsung_tty-Support-runtime-PM.patch
+  patch -p1 -i ../0034-arm64-dts-apple-t8103-Add-UART2.patch
+  patch -p1 -i ../0035-arm64-dts-apple-t600x-Add-PMGR-nodes.patch
+  patch -p1 -i ../0036-PCI-apple-Configure-link-speeds-properly.patch
+  patch -p1 -i ../0037-fixup-arm64-dts-apple-Add-initial-t6000-t6001-DTs.patch
+  patch -p1 -i ../0038-fixup-arm64-dts-apple-Add-J314-and-J316-devicetrees.patch
+  patch -p1 -i ../0039-fixup-arm64-dts-apple-Add-J314-and-J316-devicetrees.patch
+  patch -p1 -i ../0040-arm64-dts-apple-change-ethernet0-device-type-to-ethe.patch
+  patch -p1 -i ../0041-dt-bindings-i2c-apple-i2c-allow-multiple-compatibles.patch
+  patch -p1 -i ../0042-arm64-dts-apple-add-interrupt-cells-property-to-pinc.patch
+  patch -p1 -i ../0043-dt-bindings-arm-apple-Add-iMac-24-inch-2021-to-Apple.patch
+  patch -p1 -i ../0044-arm64-dts-apple-Add-missing-M1-t8103-devices.patch
+  patch -p1 -i ../0045-arm64-dts-apple-t8103-Add-i2c-nodes.patch
+  patch -p1 -i ../0046-arm64-dts-apple-t8103-Add-cd321x-nodes.patch
+  patch -p1 -i ../0047-dt-bindings-watchdog-Add-Apple-Watchdog.patch
+  patch -p1 -i ../0048-watchdog-Add-Apple-SoC-watchdog-driver.patch
+  patch -p1 -i ../0049-arm64-dts-apple-t8103-Add-watchdog-node.patch
+  patch -p1 -i ../0050-arm64-dts-apple-add-watchdog-node.patch
+  patch -p1 -i ../0051-dt-bindings-i2c-apple-i2c-add-apple-t6000-i2c-compat.patch
+  patch -p1 -i ../0052-arm64-dts-apple-t8103-Add-USB-C-related-nodes.patch
+  patch -p1 -i ../0053-arm64-dts-apple-j274-add-alias-for-ethernet-PCI-port.patch
+  patch -p1 -i ../0054-fixup-arm64-dts-apple-Add-missing-M1-t8103-devices.patch
+  patch -p1 -i ../0055-fixup-arm64-dts-apple-t8103-Add-i2c-and-cd321x-nodes.patch
+  patch -p1 -i ../0056-fixup-arm64-dts-apple-t8103-Add-USB-C-related-nodes.patch
+  patch -p1 -i ../0057-PCI-apple-Follow-the-PCIe-specifications-when-resett.patch
+  patch -p1 -i ../0058-arm64-dts-apple-t8103-Fix-PCIe-PERST-polarity.patch
+  patch -p1 -i ../0059-PCI-apple-Fix-PERST-polarity.patch
+  patch -p1 -i ../0060-t8103-fix-i2c-clk-name.patch
 
   # copy config
   cat "${srcdir}/config" > ./.config

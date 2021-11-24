@@ -1,0 +1,34 @@
+From 39fc03aa03691e21aee134b0743fc25cd2bda9c1 Mon Sep 17 00:00:00 2001
+From: Sven Peter <sven@svenpeter.dev>
+Date: Mon, 15 Nov 2021 19:23:32 +0100
+Subject: [PATCH 49/60] arm64: dts: apple: t8103: Add watchdog node
+
+Add the watchdog node which also enables reboot support on the t8103.
+
+Signed-off-by: Sven Peter <sven@svenpeter.dev>
+---
+ arch/arm64/boot/dts/apple/t8103.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/apple/t8103.dtsi b/arch/arm64/boot/dts/apple/t8103.dtsi
+index 9980db966e55..7b1392092354 100644
+--- a/arch/arm64/boot/dts/apple/t8103.dtsi
++++ b/arch/arm64/boot/dts/apple/t8103.dtsi
+@@ -319,6 +319,14 @@ pinctrl_nub: pinctrl@23d1f0000 {
+ 				     <AIC_IRQ 336 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
+ 
++		wdt: watchdog@23d2b0000 {
++			compatible = "apple,t8103-wdt", "apple,wdt";
++			reg = <0x2 0x3d2b0000 0x0 0x4000>;
++			clocks = <&clkref>;
++			interrupt-parent = <&aic>;
++			interrupts = <AIC_IRQ 338 IRQ_TYPE_LEVEL_HIGH>;
++		};
++
+ 		pinctrl_smc: pinctrl@23e820000 {
+ 			compatible = "apple,t8103-pinctrl", "apple,pinctrl";
+ 			reg = <0x2 0x3e820000 0x0 0x4000>;
+-- 
+2.34.0
+

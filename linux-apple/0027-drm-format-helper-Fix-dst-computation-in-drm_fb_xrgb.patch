@@ -1,0 +1,38 @@
+From e7aee255b6a3a19ed6cbfc4f1e53bd33ff1feab0 Mon Sep 17 00:00:00 2001
+From: Hector Martin <marcan@marcan.st>
+Date: Thu, 11 Nov 2021 01:00:01 +0900
+Subject: [PATCH 27/60] drm/format-helper: Fix dst computation in
+ drm_fb_xrgb8888_to_rgb888_dstclip()
+
+The dst pointer was being advanced by the clip width, not the full line
+stride, resulting in corruption. The clip offset was also calculated
+incorrectly.
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Hector Martin <marcan@marcan.st>
+---
+ drivers/gpu/drm/drm_format_helper.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/drm_format_helper.c b/drivers/gpu/drm/drm_format_helper.c
+index e676921422b8..12bc6b45e95b 100644
+--- a/drivers/gpu/drm/drm_format_helper.c
++++ b/drivers/gpu/drm/drm_format_helper.c
+@@ -366,12 +366,12 @@ void drm_fb_xrgb8888_to_rgb888_dstclip(void __iomem *dst, unsigned int dst_pitch
+ 		return;
+ 
+ 	vaddr += clip_offset(clip, fb->pitches[0], sizeof(u32));
+-	dst += clip_offset(clip, dst_pitch, sizeof(u16));
++	dst += clip_offset(clip, dst_pitch, 3);
+ 	for (y = 0; y < lines; y++) {
+ 		drm_fb_xrgb8888_to_rgb888_line(dbuf, vaddr, linepixels);
+ 		memcpy_toio(dst, dbuf, dst_len);
+ 		vaddr += fb->pitches[0];
+-		dst += dst_len;
++		dst += dst_pitch;
+ 	}
+ 
+ 	kfree(dbuf);
+-- 
+2.34.0
+

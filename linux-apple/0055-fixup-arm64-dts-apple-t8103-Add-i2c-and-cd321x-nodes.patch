@@ -1,0 +1,57 @@
+From 1c9da27551a55f5d840ed7cae3c2a483ad240438 Mon Sep 17 00:00:00 2001
+From: Janne Grunau <j@jannau.net>
+Date: Sun, 21 Nov 2021 20:04:54 +0100
+Subject: [PATCH 55/60] fixup! arm64: dts: apple: t8103: Add i2c and cd321x
+ nodes
+
+---
+ arch/arm64/boot/dts/apple/t8103.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/apple/t8103.dtsi b/arch/arm64/boot/dts/apple/t8103.dtsi
+index ade417507624..3d9eb73ba4d5 100644
+--- a/arch/arm64/boot/dts/apple/t8103.dtsi
++++ b/arch/arm64/boot/dts/apple/t8103.dtsi
+@@ -115,6 +115,7 @@ i2c0: i2c@235010000 {
+ 			compatible = "apple,t8103-i2c", "apple,i2c";
+ 			reg = <0x2 0x35010000 0x0 0x4000>;
+ 			clocks = <&clk24>;
++			power-domains = <&ps_i2c0>;
+ 			interrupt-parent = <&aic>;
+ 			interrupts = <AIC_IRQ 627 IRQ_TYPE_LEVEL_HIGH>;
+ 			pinctrl-0 = <&i2c0_pins>;
+@@ -127,6 +128,7 @@ i2c1: i2c@235014000 {
+ 			compatible = "apple,t8103-i2c", "apple,i2c";
+ 			reg = <0x2 0x35014000 0x0 0x4000>;
+ 			clocks = <&clk24>;
++			power-domains = <&ps_i2c1>;
+ 			interrupt-parent = <&aic>;
+ 			interrupts = <AIC_IRQ 628 IRQ_TYPE_LEVEL_HIGH>;
+ 			pinctrl-0 = <&i2c1_pins>;
+@@ -139,6 +141,7 @@ i2c2: i2c@235018000 {
+ 			compatible = "apple,t8103-i2c", "apple,i2c";
+ 			reg = <0x2 0x35018000 0x0 0x4000>;
+ 			clocks = <&clk24>;
++			power-domains = <&ps_i2c2>;
+ 			interrupt-parent = <&aic>;
+ 			interrupts = <AIC_IRQ 629 IRQ_TYPE_LEVEL_HIGH>;
+ 			pinctrl-0 = <&i2c2_pins>;
+@@ -152,6 +155,7 @@ i2c3: i2c@23501c000 {
+ 			compatible = "apple,t8103-i2c", "apple,i2c";
+ 			reg = <0x2 0x3501c000 0x0 0x4000>;
+ 			clocks = <&clk24>;
++			power-domains = <&ps_i2c3>;
+ 			interrupt-parent = <&aic>;
+ 			interrupts = <AIC_IRQ 630 IRQ_TYPE_LEVEL_HIGH>;
+ 			pinctrl-0 = <&i2c3_pins>;
+@@ -164,6 +168,7 @@ i2c4: i2c@235020000 {
+ 			compatible = "apple,t8103-i2c", "apple,i2c";
+ 			reg = <0x2 0x35020000 0x0 0x4000>;
+ 			clocks = <&clk24>;
++			power-domains = <&ps_i2c4>;
+ 			interrupt-parent = <&aic>;
+ 			interrupts = <AIC_IRQ 631 IRQ_TYPE_LEVEL_HIGH>;
+ 			pinctrl-0 = <&i2c4_pins>;
+-- 
+2.34.0
+

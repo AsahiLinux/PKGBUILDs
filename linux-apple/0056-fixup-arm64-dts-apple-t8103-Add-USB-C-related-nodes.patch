@@ -1,0 +1,65 @@
+From fa0b9440e2a643f216c3cbe30fb42b88e8ad7f05 Mon Sep 17 00:00:00 2001
+From: Janne Grunau <j@jannau.net>
+Date: Sun, 21 Nov 2021 20:29:21 +0100
+Subject: [PATCH 56/60] fixup! arm64: dts: apple: t8103: Add USB-C related
+ nodes
+
+---
+ arch/arm64/boot/dts/apple/t8103.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/apple/t8103.dtsi b/arch/arm64/boot/dts/apple/t8103.dtsi
+index 3d9eb73ba4d5..6921d413d2f0 100644
+--- a/arch/arm64/boot/dts/apple/t8103.dtsi
++++ b/arch/arm64/boot/dts/apple/t8103.dtsi
+@@ -358,6 +358,7 @@ dwc3_0_dart_0: iommu@382f00000 {
+ 			reg = <0x3 0x82f00000 0x0 0x4000>;
+ 			interrupt-parent = <&aic>;
+ 			interrupts = <AIC_IRQ 781 IRQ_TYPE_LEVEL_HIGH>;
++			power-domains = <&ps_atc0_usb>;
+ 			#iommu-cells = <1>;
+ 		};
+ 
+@@ -366,6 +367,7 @@ dwc3_0_dart_1: iommu@382f80000 {
+ 			reg = <0x3 0x82f80000 0x0 0x4000>;
+ 			interrupt-parent = <&aic>;
+ 			interrupts = <AIC_IRQ 781 IRQ_TYPE_LEVEL_HIGH>;
++			power-domains = <&ps_atc0_usb>;
+ 			#iommu-cells = <1>;
+ 		};
+ 
+@@ -374,6 +376,7 @@ dwc3_0: usb@382280000 {
+ 			reg = <0x3 0x82280000 0x0 0x100000>;
+ 			interrupt-parent = <&aic>;
+ 			interrupts = <AIC_IRQ 777 IRQ_TYPE_LEVEL_HIGH>;
++			power-domains = <&ps_atc0_usb>;
+ 			dr_mode = "otg";
+ 			usb-role-switch;
+ 			role-switch-default-mode = "host";
+@@ -391,6 +394,7 @@ dwc3_1_dart_0: iommu@502f00000 {
+ 			reg = <0x5 0x02f00000 0x0 0x4000>;
+ 			interrupt-parent = <&aic>;
+ 			interrupts = <AIC_IRQ 861 IRQ_TYPE_LEVEL_HIGH>;
++			power-domains = <&ps_atc1_usb>;
+ 			#iommu-cells = <1>;
+ 		};
+ 
+@@ -399,6 +403,7 @@ dwc3_1_dart_1: iommu@502f80000 {
+ 			reg = <0x5 0x02f80000 0x0 0x4000>;
+ 			interrupt-parent = <&aic>;
+ 			interrupts = <AIC_IRQ 861 IRQ_TYPE_LEVEL_HIGH>;
++			power-domains = <&ps_atc1_usb>;
+ 			#iommu-cells = <1>;
+ 		};
+ 
+@@ -407,6 +412,7 @@ dwc3_1: usb@b02280000 {
+ 			reg = <0x5 0x02280000 0x0 0x100000>;
+ 			interrupt-parent = <&aic>;
+ 			interrupts = <AIC_IRQ 857 IRQ_TYPE_LEVEL_HIGH>;
++			power-domains = <&ps_atc1_usb>;
+ 			dr_mode = "otg";
+ 			usb-role-switch;
+ 			role-switch-default-mode = "host";
+-- 
+2.34.0
+

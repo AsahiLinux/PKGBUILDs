@@ -1,0 +1,35 @@
+From fb8716cfe122d432f30a9b31c32eaa5f39b7c381 Mon Sep 17 00:00:00 2001
+From: Janne Grunau <j@jannau.net>
+Date: Fri, 19 Nov 2021 19:48:08 +0100
+Subject: [PATCH 38/60] fixup! arm64: dts: apple: Add J314 and J316 devicetrees
+
+Signed-off-by: Janne Grunau <j@jannau.net>
+---
+ arch/arm64/boot/dts/apple/t600x-j314-j316.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/apple/t600x-j314-j316.dtsi b/arch/arm64/boot/dts/apple/t600x-j314-j316.dtsi
+index beacabb1ff07..577101db66b0 100644
+--- a/arch/arm64/boot/dts/apple/t600x-j314-j316.dtsi
++++ b/arch/arm64/boot/dts/apple/t600x-j314-j316.dtsi
+@@ -134,7 +134,7 @@ hpm5: tps6598x@3a {
+ &port00 {
+ 	/* WLAN */
+ 	bus-range = <1 1>;
+-	wifi0: pci@0,0 {
++	wifi0: ethernet@0,0 {
+ 		reg = <0x10000 0x0 0x0 0x0 0x0>;
+ 		/* To be filled by the loader */
+ 		local-mac-address = [00 10 18 00 00 10];
+@@ -145,7 +145,7 @@ &port01 {
+ 	/* SD card reader */
+ 	bus-range = <2 2>;
+ 	max-link-speed = <1>;
+-	sdhci0: pci@0,0 {
++	sdhci0: ethernet@0,0 {
+ 		reg = <0x20000 0x0 0x0 0x0 0x0>;
+ 		cd-inverted;
+ 		wp-inverted;
+-- 
+2.34.0
+

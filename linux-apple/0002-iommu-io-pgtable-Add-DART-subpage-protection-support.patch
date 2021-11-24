@@ -1,0 +1,52 @@
+From 6a5889f0ca308c1412b0559639dacdf1680d4821 Mon Sep 17 00:00:00 2001
+From: Sven Peter <sven@svenpeter.dev>
+Date: Wed, 17 Nov 2021 19:40:16 +0100
+Subject: [PATCH 02/60] iommu/io-pgtable: Add DART subpage protection support
+
+DART allows to only expose a subpage to the device. While this is an
+optional feature on the M1 DARTs the new ones present on the Pro/Max
+models require this field in every PTE.
+
+Signed-off-by: Sven Peter <sven@svenpeter.dev>
+---
+ drivers/iommu/io-pgtable-arm.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/drivers/iommu/io-pgtable-arm.c b/drivers/iommu/io-pgtable-arm.c
+index dd9e47189d0d..a8c660b8b3e9 100644
+--- a/drivers/iommu/io-pgtable-arm.c
++++ b/drivers/iommu/io-pgtable-arm.c
+@@ -10,6 +10,7 @@
+ #define pr_fmt(fmt)	"arm-lpae io-pgtable: " fmt
+ 
+ #include <linux/atomic.h>
++#include <linux/bitfield.h>
+ #include <linux/bitops.h>
+ #include <linux/io-pgtable.h>
+ #include <linux/kernel.h>
+@@ -133,6 +134,9 @@
+ #define APPLE_DART_PTE_PROT_NO_WRITE (1<<7)
+ #define APPLE_DART_PTE_PROT_NO_READ (1<<8)
+ 
++#define APPLE_DART_PTE_SUBPAGE_START	GENMASK_ULL(63, 52)
++#define APPLE_DART_PTE_SUBPAGE_END	GENMASK_ULL(51, 40)
++
+ /* IOPTE accessors */
+ #define iopte_deref(pte,d) __va(iopte_to_paddr(pte, d))
+ 
+@@ -273,6 +277,12 @@ static void __arm_lpae_init_pte(struct arm_lpae_io_pgtable *data,
+ 	else
+ 		pte |= ARM_LPAE_PTE_TYPE_BLOCK;
+ 
++	if (data->iop.fmt == APPLE_DART) {
++		/* subpage protection: always allow access to the entire page */
++		pte |= FIELD_PREP(APPLE_DART_PTE_SUBPAGE_START, 0);
++		pte |= FIELD_PREP(APPLE_DART_PTE_SUBPAGE_END, 0xfff);
++	}
++
+ 	for (i = 0; i < num_entries; i++)
+ 		ptep[i] = pte | paddr_to_iopte(paddr + i * sz, data);
+ 
+-- 
+2.34.0
+

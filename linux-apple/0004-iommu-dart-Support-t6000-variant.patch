@@ -1,0 +1,81 @@
+From 53bf03dc830465bce4320e8524ff670570b6b81d Mon Sep 17 00:00:00 2001
+From: Sven Peter <sven@svenpeter.dev>
+Date: Tue, 2 Nov 2021 18:10:52 +0100
+Subject: [PATCH 04/60] iommu: dart: Support t6000 variant
+
+The M1 Pro/Max SoCs come with a new variant of DART which supports a
+larger physical address space with a slightly different PTE format.
+Pass through the correct paddr address space size to the io-pgtable code
+which will take care of the rest.
+
+Signed-off-by: Sven Peter <sven@svenpeter.dev>
+---
+ drivers/iommu/apple-dart.c | 19 +++++++++++++++++--
+ 1 file changed, 17 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/iommu/apple-dart.c b/drivers/iommu/apple-dart.c
+index 565ef5598811..c04648dfd747 100644
+--- a/drivers/iommu/apple-dart.c
++++ b/drivers/iommu/apple-dart.c
+@@ -81,10 +81,15 @@
+ #define DART_TTBR_VALID BIT(31)
+ #define DART_TTBR_SHIFT 12
+ 
++struct apple_dart_hw {
++	u32 oas;
++};
++
+ /*
+  * Private structure associated with each DART device.
+  *
+  * @dev: device struct
++ * @hw: SoC-specific hardware data
+  * @regs: mapped MMIO region
+  * @irq: interrupt number, can be shared with other DARTs
+  * @clks: clocks associated with this DART
+@@ -98,6 +103,7 @@
+  */
+ struct apple_dart {
+ 	struct device *dev;
++	const struct apple_dart_hw *hw;
+ 
+ 	void __iomem *regs;
+ 
+@@ -421,7 +427,7 @@ static int apple_dart_finalize_domain(struct iommu_domain *domain,
+ 	pgtbl_cfg = (struct io_pgtable_cfg){
+ 		.pgsize_bitmap = dart->pgsize,
+ 		.ias = 32,
+-		.oas = 36,
++		.oas = dart->hw->oas,
+ 		.coherent_walk = 1,
+ 		.iommu_dev = dart->dev,
+ 	};
+@@ -855,6 +861,7 @@ static int apple_dart_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 
+ 	dart->dev = dev;
++	dart->hw = of_device_get_match_data(dev);
+ 	spin_lock_init(&dart->lock);
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+@@ -944,8 +951,16 @@ static int apple_dart_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static const struct apple_dart_hw apple_dart_hw_t8103 = {
++	.oas = 36,
++};
++static const struct apple_dart_hw apple_dart_hw_t6000 = {
++	.oas = 42,
++};
++
+ static const struct of_device_id apple_dart_of_match[] = {
+-	{ .compatible = "apple,t8103-dart", .data = NULL },
++	{ .compatible = "apple,t8103-dart", .data = &apple_dart_hw_t8103 },
++	{ .compatible = "apple,t6000-dart", .data = &apple_dart_hw_t6000 },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, apple_dart_of_match);
+-- 
+2.34.0
+
