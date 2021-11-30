@@ -21,12 +21,14 @@ source=("https://git.kernel.org/torvalds/t/${_srcname}.tar.gz"
         'apple-m1-exp_v5.16-rc2_3-keyboard.patch'
         'config'
         'linux.preset'
+        'linux-apple.install'
         '60-linux.hook'
         '90-linux.hook')
 sha256sums=('90be486cc939f008d40c8217e5e9bbd3dd0e0a998440214573a128295fb0dd80'
             '7e271fd691af71e6a098c9f3db70aa37274f6ad7028fd8588e960df696baf96e'
             'cb8ddedbded32e75620950d7023e65c67aea82d08d3caafb481cf2882e150c82'
             '6837b3e2152f142f3fff595c6cbd03423f6e7b8d525aac8ae3eb3b58392bd255'
+            'c5d6f202fad3cb5e4842bc7d06ed7156ae4326d3d6fbf7439e3fbe2ad60514cc'
             'ae2e95db94ef7176207c690224169594d49445e04249d2499e9d2fbc117a0b21'
             '71df1b18a3885b151a3b9d926a91936da2acc90d5e27f1ad326745779cd3759d')
 
