@@ -4,29 +4,29 @@
 buildarch=8
 
 _rcver=5.16
-_rcrel=2
+_rcrel=4
 
 pkgbase=linux-apple
 _srcname=linux-${_rcver}-rc${_rcrel}
 _kernelname=${pkgbase#linux}
 _desc="AArch64 Apple Silicon (M1 development kernel)"
 pkgver=${_rcver}.rc${_rcrel}
-pkgrel=2
+pkgrel=1
 arch=('aarch64')
 url="http://www.kernel.org/"
 license=('GPL2')
 makedepends=('xmlto' 'docbook-xsl' 'kmod' 'inetutils' 'bc' 'git' 'dtc')
 options=('!strip')
 source=("https://git.kernel.org/torvalds/t/${_srcname}.tar.gz"
-        'apple-m1-exp_v5.16-rc2_3-keyboard.patch'
+        'apple-m1-exp_v5.16-rc4_1-keyboard.patch'
         'config'
         'linux.preset'
         'linux-apple.install'
         '60-linux.hook'
         '90-linux.hook')
-sha256sums=('90be486cc939f008d40c8217e5e9bbd3dd0e0a998440214573a128295fb0dd80'
-            '7e271fd691af71e6a098c9f3db70aa37274f6ad7028fd8588e960df696baf96e'
-            'cb8ddedbded32e75620950d7023e65c67aea82d08d3caafb481cf2882e150c82'
+sha256sums=('d4dc0a118b391ac594279178ef0217ca69f45dc65d0c5d2fdd8964828f608036'
+            '7d0e50a5c299b8331d6d781bfe148c82ebe01ca163148d4464bf2b2eb8411098'
+            'bfcf0240e49378961abfe7f74828576fe5587f9912bff9eb59093761425f0c27'
             '6837b3e2152f142f3fff595c6cbd03423f6e7b8d525aac8ae3eb3b58392bd255'
             'c5d6f202fad3cb5e4842bc7d06ed7156ae4326d3d6fbf7439e3fbe2ad60514cc'
             'ae2e95db94ef7176207c690224169594d49445e04249d2499e9d2fbc117a0b21'
@@ -36,7 +36,7 @@ prepare() {
   cd "${srcdir}/${_srcname}"
 
   # ALARM patches
-  patch -p1 -i ../apple-m1-exp_v5.16-rc2_3-keyboard.patch
+  patch -p1 -i ../apple-m1-exp_v5.16-rc4_1-keyboard.patch
 
   # copy config
   cat "${srcdir}/config" > ./.config
