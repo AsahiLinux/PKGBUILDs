@@ -3,8 +3,8 @@
 
 buildarch=8
 
-_rcver=5.16
-_rcrel=6
+_rcver=5.17
+_rcrel=1
 
 pkgbase=linux-apple
 _srcname=linux-${_rcver}-rc${_rcrel}
@@ -18,25 +18,18 @@ license=('GPL2')
 makedepends=('xmlto' 'docbook-xsl' 'kmod' 'inetutils' 'bc' 'git' 'dtc')
 options=('!strip')
 source=("https://git.kernel.org/torvalds/t/${_srcname}.tar.gz"
-        'apple-m1-exp_v5.16-rc6_1.patch'
+        'asahi-5.17-rc1-2022-01-28_1.patch'
         'config'
         'linux.preset'
         'linux-apple.install'
         '60-linux.hook'
         '90-linux.hook')
-sha256sums=('2fb1dca461e00412822fa8de089701e5ae1ef703e1a57e839f5fd1a194f33ecb'
-            'faa89712754497881d590f8c8e8cacba4580edfae821b77795836045a43ef20c'
-            'eaf54700d5cab3768f1992a649f1fbea944c7ff26c7cacef7f33502a8f92f03e'
-            '6837b3e2152f142f3fff595c6cbd03423f6e7b8d525aac8ae3eb3b58392bd255'
-            'c5d6f202fad3cb5e4842bc7d06ed7156ae4326d3d6fbf7439e3fbe2ad60514cc'
-            'ae2e95db94ef7176207c690224169594d49445e04249d2499e9d2fbc117a0b21'
-            '71df1b18a3885b151a3b9d926a91936da2acc90d5e27f1ad326745779cd3759d')
 
 prepare() {
   cd "${srcdir}/${_srcname}"
 
   # ALARM patches
-  patch -p1 -i ../apple-m1-exp_v5.16-rc6_1.patch
+  patch -p1 -i ../asahi-5.17-rc1-2022-01-28_1.patch
 
   # copy config
   cat "${srcdir}/config" > ./.config
@@ -215,3 +208,11 @@ for _p in ${pkgname[@]}; do
     _package${_p#${pkgbase}}
   }"
 done
+
+sha256sums=('9269b46a87c16941871f81057c8b82c913869eb86037b92c0bd4d5b9aa69dece'
+            '3b5380b403386203c8cb2324ebfec9dab440c818b7f7b05127d073dc78290128'
+            '1bf94d3c0aa3f518936d1f0efa3c8d4e343d86ea9c72ed97a84b75f41e7a5c71'
+            '6837b3e2152f142f3fff595c6cbd03423f6e7b8d525aac8ae3eb3b58392bd255'
+            'c5d6f202fad3cb5e4842bc7d06ed7156ae4326d3d6fbf7439e3fbe2ad60514cc'
+            'ae2e95db94ef7176207c690224169594d49445e04249d2499e9d2fbc117a0b21'
+            '71df1b18a3885b151a3b9d926a91936da2acc90d5e27f1ad326745779cd3759d')
