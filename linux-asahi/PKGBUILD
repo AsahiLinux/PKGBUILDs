@@ -4,13 +4,14 @@
 buildarch=8
 
 _rcver=5.17
-_rcrel=1
+_rcrel=3
 
 pkgbase=linux-asahi
-_srcname=linux-${_rcver}-rc${_rcrel}
+_commit_id=501bccfe4c2d4d9524d8cafcdd4e84b7c58e976a
+_srcname=linux-${_commit_id}
 _kernelname=${pkgbase#linux}
 _desc="AArch64 Apple Silicon (M1 development kernel)"
-pkgver=${_rcver}.rc${_rcrel}
+pkgver=${_rcver}.rc${_rcrel}.20220217
 pkgrel=1
 arch=('aarch64')
 url="http://www.kernel.org/"
@@ -21,13 +22,13 @@ makedepends=(
 )
 options=('!strip')
 source=(
-  "https://git.kernel.org/torvalds/t/${_srcname}.tar.gz"
+  https://github.com/AsahiLinux/linux/archive/${_commit_id}.tar.gz
   config         # the main kernel config file
-  asahi-5.17-rc1-2022-01-28_1.patch
+  asahi-next-20220217.patch
 )
-sha256sums=('9269b46a87c16941871f81057c8b82c913869eb86037b92c0bd4d5b9aa69dece'
-            'db4072da3c1b5697c923132dc67b768f0f8e4053c8262cc18cbd700ee6ca1b5b'
-            '3b5380b403386203c8cb2324ebfec9dab440c818b7f7b05127d073dc78290128')
+sha256sums=('69d75ae720f2571639f379f5bd0b48e071216718dd989a3d5f19f1e7d833726f'
+            'eae80fad5c9230c3a7866a62930b1235cb893b8a9b8ca108a83f67335e8346ac'
+            'b585dc54f224079ef1f8e9b7292f43db2f45952108425f31179a91a641f93442')
 
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
