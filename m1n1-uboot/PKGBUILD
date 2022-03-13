@@ -13,7 +13,7 @@ _uboot_srcname=u-boot-${_uboot_commit_id}
 arch=('aarch64')
 url='http://asahilinux.org'
 license=('MIT')
-makedepends=( imagemagick )
+makedepends=( bc imagemagick )
 source=(
   "https://github.com/AsahiLinux/artwork/archive/${_artwork_commit_id}.tar.gz"
   "https://github.com/AsahiLinux/m1n1/archive/${_m1n1_commit_id}.tar.gz"
