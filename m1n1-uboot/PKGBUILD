@@ -2,7 +2,7 @@
 
 pkgname=m1n1-uboot
 pkgver=20220309
-pkgrel=2
+pkgrel=3
 pkgdesc='Asahi Linux bootloader (m1n1 + U-Boot)'
 _artwork_commit_id=35626c31f5c5a8a884aaff93f864795026495742
 _m1n1_commit_id=82ec1695badc74d2ad9da4305bfca7bd31bf6359
@@ -45,7 +45,7 @@ build() {
   cd "${srcdir}"
   cat "${_m1n1_srcname}/build/m1n1.bin" \
       "${_uboot_srcname}/arch/arm/dts/"t[86]*.dtb \
-      "${_uboot_srcname}/u-boot-nodtb.bin" \
+      <(gzip -c "${_uboot_srcname}/u-boot-nodtb.bin") \
       > "m1n1-uboot.bin"
 }
 
