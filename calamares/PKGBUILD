@@ -1,0 +1,27 @@
+pkgname=calamares
+pkgver=3.2.53
+pkgrel=1
+pkgdesc='Universal linux distro graphical installer'
+arch=('aarch64')
+license=('GPL3')
+url='https://calamares.io/'
+depends=('binutils' 'fakeroot' 'gcc' 'boost' 'qt5-tools' 'yaml-cpp' 'ack' 'kpmcore' 'qt5-location' 'icu' 'qt5-declarative' 'qt5-translations' 'qt5-xmlpatterns' 'kiconthemes' 'kservice' 'kio' 'kparts' 'cmake' 'autoconf' 'automake' 'bison' 'flex' 'git' 'libtool' 'm4' 'make' 'extra-cmake-modules' 'libpwquality' 'python3' 'python-qtpy' 'qt5-webengine' 'python-pip')
+source=("https://github.com/calamares/calamares/releases/download/v$pkgver/$pkgname-$pkgver.tar.gz")
+sha256sums=('2d692042cbcfed79aea410d20276f07b05914fe65a00bc83170df0ee2cfae97d')
+
+prepare() {
+  cd $pkgname-$pkgver
+}
+
+build() {
+    cd $pkgname-$pkgver
+    mkdir -p build
+    cd build
+    cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DWITH_PYTHONQT=ON ..
+    make
+}
+
+package() {
+cd $pkgname-$pkgver/build
+  make DESTDIR="$pkgdir/" install
+}
