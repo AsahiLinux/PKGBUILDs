@@ -2,16 +2,19 @@
 
 pkgname=asahi-scripts
 pkgver=20220311
-pkgrel=1
+pkgrel=2
 pkgdesc='Asahi Linux maintenance scripts'
 arch=('any')
 url='http://asahilinux.org'
-license=('GPL')
+license=('MIT')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/AsahiLinux/${pkgname}/archive/refs/tags/${pkgver}.tar.gz")
 sha256sums=('db901b4fe0669e2b97e1d037affde1827ef7e4be842d5a712c8b2cff84a600f0')
 b2sums=('7ffd4f36590a0cd2a10da405aad95b5e5ce5df2b9add14fa3f06d8e35b6ee95eee71c52b6bd8620617340b83aead38fc346459587614e3206ac8075ebe6c4d34')
 
 package() {
-	cd "${srcdir}/${pkgname}-${pkgver}"
-	make PREFIX=/usr DESTDIR=${pkgdir} install
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  make PREFIX=/usr DESTDIR=${pkgdir} install
+
+  install -Dm644 "$srcdir/${pkgname}-${pkgver}/LICENSE" \
+    "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
