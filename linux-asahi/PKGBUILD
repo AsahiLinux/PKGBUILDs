@@ -4,15 +4,15 @@
 buildarch=8
 
 _rcver=5.17
-_rcrel=3
+_rcrel=6
 
 pkgbase=linux-asahi
-_commit_id=501bccfe4c2d4d9524d8cafcdd4e84b7c58e976a
+_commit_id=0672359c1817619fdc5619d2989894b56bad7d37
 _srcname=linux-${_commit_id}
 _kernelname=${pkgbase#linux}
 _desc="AArch64 Apple Silicon (M1 development kernel)"
-pkgver=${_rcver}.rc${_rcrel}.20220217
-pkgrel=1
+pkgver=${_rcver}.rc${_rcrel}.20220301
+pkgrel=4
 arch=('aarch64')
 url="http://www.kernel.org/"
 license=('GPL2')
@@ -24,12 +24,11 @@ options=('!strip')
 source=(
   https://github.com/AsahiLinux/linux/archive/${_commit_id}.tar.gz
   config         # the main kernel config file
-  asahi-next-20220217.patch
 )
-sha256sums=('69d75ae720f2571639f379f5bd0b48e071216718dd989a3d5f19f1e7d833726f'
-            'eae80fad5c9230c3a7866a62930b1235cb893b8a9b8ca108a83f67335e8346ac'
-            'b585dc54f224079ef1f8e9b7292f43db2f45952108425f31179a91a641f93442')
-
+sha256sums=('a3ff7ca0cca7c72c157e7a6b7d56b8f4c26b287d1dc82611d454c19d7094918f'
+            '4723a3a37f05072ddccdf1b8480b83d9565560b37607da823f63248b2c644f2f')
+b2sums=('124071281c67198eadbdc3b4839b748592bc3d0b74e82ce1d9fcea80b5e216d2fc1e5a9df55afadebd5d881d0396044b61e3598e500bc1df565f02d695a65b01'
+        '6655084185e49c60f3f4f839174e3cd0d0037fd8520c990fdb3d023494bc49b29e348866942f35f2addfc65c5586250acd997a22d2c14522cc6f15949505ce93')
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
 export KBUILD_BUILD_TIMESTAMP="$(date -Ru${SOURCE_DATE_EPOCH:+d @$SOURCE_DATE_EPOCH})"

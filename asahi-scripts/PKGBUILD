@@ -1,15 +1,15 @@
 # Maintainer: Hector Martin <marcan@marcan.st>
 
 pkgname=asahi-scripts
-pkgver=20220301
+pkgver=20220304
 pkgrel=1
 pkgdesc='Asahi Linux maintenance scripts'
 arch=('any')
 url='http://asahilinux.org'
 license=('GPL')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/AsahiLinux/${pkgname}/archive/refs/tags/${pkgver}.tar.gz")
-sha256sums=('aa390ffa2ca2d239f326aaece4c60de9d3835caea6b7149a5cb7434feabb0574')
-b2sums=('bc93436657d4d69d77e012e9924344110d96d32a6e4638f2bedaf1569edd4686e26a8f95d1db0016ff761142aa9505b9703b893e8f1eb91f54b74ff0145aaf24')
+sha256sums=('bb9badde86d3203c5c0b0a9c0ef8f32a32bf9eb0105c1eb4d1566191c94b5704')
+b2sums=('19f47a78d00b76bac75d5f9508dbefefa936c44f0074aba27d72eca80b6d7d1ad9565040e8af4b320be92d79deca0e5c6208c08fc35f32cab5c911c42601ebb9')
 
 package() {
 	cd "${srcdir}/${pkgname}-${pkgver}"

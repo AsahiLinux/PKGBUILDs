@@ -1,0 +1,63 @@
+# Maintainer: Hector Martin <marcan@marcan.st>
+
+pkgname=m1n1-uboot
+pkgver=20220309
+pkgrel=3
+pkgdesc='Asahi Linux bootloader (m1n1 + U-Boot)'
+_artwork_commit_id=35626c31f5c5a8a884aaff93f864795026495742
+_m1n1_commit_id=82ec1695badc74d2ad9da4305bfca7bd31bf6359
+_uboot_commit_id=13a5ba063cf32202bcd31a93db00724eb9a667b5
+_artwork_srcname=artwork-${_artwork_commit_id}
+_m1n1_srcname=m1n1-${_m1n1_commit_id}
+_uboot_srcname=u-boot-${_uboot_commit_id}
+arch=('aarch64')
+url='http://asahilinux.org'
+license=('MIT')
+makedepends=( bc imagemagick )
+source=(
+  "https://github.com/AsahiLinux/artwork/archive/${_artwork_commit_id}.tar.gz"
+  "https://github.com/AsahiLinux/m1n1/archive/${_m1n1_commit_id}.tar.gz"
+  "https://github.com/AsahiLinux/u-boot/archive/${_uboot_commit_id}.tar.gz"
+)
+install=m1n1-uboot.install
+sha256sums=('ffa129b5cae8debd4ffd97f7f1ac7f571c7ba4679793cd138918c2ae76a7103d'
+            '985316a4fe4c9b5c404f2865a42a330add1af689e1b185764aadbb4f2aad3e4f'
+            'd3562af07e61db057b1ebdd01ea48bf76e46050aea7773b5016d86bdc3fcf39a')
+b2sums=('26e9668f7c7393fec24b53b184ea0eabed4f46479c1aab26728d01c179091683cc4387ff83796bdcbb289376236faf9f651197b9fbba51e52540e58ebdc8bcc5'
+        '15389e5af771290209d429008d95b00e8afc5491cc7fa41d54afd12ea26163c1fd33a1fc70073b1734ee2d17200d73c4ebcee9721c7f0bb294aee7f68cf07c9c'
+        '4d3f6ae703fe3d8d8e8a525bc3d0020cd765d1672c712940cf247204aa0af7eca2aa65048ed131b9d0edf5594fbfbc253412c98145a557bf567ce10dcb6bd9e5')
+
+prepare() {
+  rm -rf "${srcdir}/$_m1n1_srcname"/artwork
+  cp -r "${srcdir}/$_artwork_srcname" "${srcdir}/$_m1n1_srcname"/artwork
+
+  cd "${srcdir}/$_uboot_srcname"
+  make apple_m1_defconfig
+}
+
+build() {
+  cd "${srcdir}/$_m1n1_srcname"
+  make ARCH= RELEASE=1
+
+  cd "${srcdir}/$_uboot_srcname"
+  make
+
+  cd "${srcdir}"
+  cat "${_m1n1_srcname}/build/m1n1.bin" \
+      "${_uboot_srcname}/arch/arm/dts/"t[86]*.dtb \
+      <(gzip -c "${_uboot_srcname}/u-boot-nodtb.bin") \
+      > "m1n1-uboot.bin"
+}
+
+package() {
+  cd "${srcdir}"
+
+  tgtdir="$pkgdir/usr/lib/asahi-boot"
+
+  install -Dt "$tgtdir" -m644 \
+    m1n1-uboot.bin "${_m1n1_srcname}/build/m1n1.bin" \
+    "${_uboot_srcname}/u-boot-nodtb.bin"
+
+  install -Dt "$tgtdir/dtb" -m644 \
+    "${_uboot_srcname}/arch/arm/dts/"t[86]*.dtb
+}
