@@ -1,7 +1,7 @@
 # Maintainer: Hector Martin <marcan@marcan.st>
 
 pkgname=xkeyboard-config-asahi
-pkgver=2.35.1_2
+pkgver=2.35.1_3
 pkgrel=1
 pkgdesc="X keyboard configuration files"
 arch=(any)
@@ -12,7 +12,7 @@ provides=('xkbdata' 'xkeyboard-config')
 replaces=('xkbdata' 'xkeyboard-config')
 conflicts=('xkbdata' 'xkeyboard-config')
 source=(https://github.com/AsahiLinux/${pkgname%%-asahi}/archive/refs/tags/${pkgname%%-asahi}-${pkgver/_/-asahi}.tar.gz)
-sha256sums=('72494632532d09e1964313b3fbcd269bf25c58454f61c420225583fe2ef6a372')
+sha256sums=('3abbcd5ce9112318013e4c972fc2cd02650a2961f118b310713f2dbb42831f54')
 _srcdir=${pkgname%%-asahi}-${pkgname%%-asahi}-${pkgver/_/-asahi}
 
 build() {
