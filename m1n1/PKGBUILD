@@ -1,0 +1,45 @@
+# Maintainer: Hector Martin <marcan@marcan.st>
+
+pkgname=m1n1
+pkgver=1.0
+pkgrel=1
+pkgdesc='Asahi Linux bootloader'
+_artwork_commit_id=35626c31f5c5a8a884aaff93f864795026495742
+_m1n1_commit_id=v1.0
+_artwork_srcname=artwork-${_artwork_commit_id}
+_m1n1_srcname=m1n1-${_m1n1_commit_id##v}
+arch=('aarch64')
+url='http://asahilinux.org'
+license=('MIT')
+depends=( 'asahi-scripts>=20220317' )
+makedepends=( imagemagick )
+source=(
+  "artwork-${_artwork_commit_id}.tar.gz::https://github.com/AsahiLinux/artwork/archive/${_artwork_commit_id}.tar.gz"
+  "m1n1-${_m1n1_commit_id}.tar.gz::https://github.com/AsahiLinux/m1n1/archive/${_m1n1_commit_id}.tar.gz"
+)
+install=m1n1.install
+sha256sums=('ffa129b5cae8debd4ffd97f7f1ac7f571c7ba4679793cd138918c2ae76a7103d'
+            'a405f59d0677c38c590fd71e54784220e73f187e58b63f585bfca08406150f5f')
+b2sums=('26e9668f7c7393fec24b53b184ea0eabed4f46479c1aab26728d01c179091683cc4387ff83796bdcbb289376236faf9f651197b9fbba51e52540e58ebdc8bcc5'
+        'dfb6e057182957b0f93e27433b5e493566d1c77d24f028f55beee5235039d05afa33a44f591d4d385b4dd78648a1b97cd867a8a977a9328c927524e4fc69585f')
+
+prepare() {
+  rm -rf "${srcdir}/$_m1n1_srcname"/artwork
+  cp -r "${srcdir}/$_artwork_srcname" "${srcdir}/$_m1n1_srcname"/artwork
+}
+
+build() {
+  cd "${srcdir}/$_m1n1_srcname"
+  make ARCH= RELEASE=1
+}
+
+package() {
+  cd "${srcdir}"
+
+  tgtdir="$pkgdir/usr/lib/asahi-boot"
+
+  install -Dt "$tgtdir" -m644 "${_m1n1_srcname}/build/m1n1.bin"
+
+  install -Dm644 "$srcdir/$_m1n1_srcname/LICENSE" \
+    "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
