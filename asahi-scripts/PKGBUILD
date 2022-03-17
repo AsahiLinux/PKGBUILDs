@@ -7,7 +7,7 @@ pkgdesc='Asahi Linux maintenance scripts'
 arch=('any')
 url='http://asahilinux.org'
 license=('GPL')
-source=("https://github.com/AsahiLinux/${pkgname}/archive/refs/tags/${pkgver}.tar.gz")
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/AsahiLinux/${pkgname}/archive/refs/tags/${pkgver}.tar.gz")
 sha256sums=('bb9badde86d3203c5c0b0a9c0ef8f32a32bf9eb0105c1eb4d1566191c94b5704')
 b2sums=('19f47a78d00b76bac75d5f9508dbefefa936c44f0074aba27d72eca80b6d7d1ad9565040e8af4b320be92d79deca0e5c6208c08fc35f32cab5c911c42601ebb9')
 
