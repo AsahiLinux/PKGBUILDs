@@ -2,19 +2,17 @@
 
 pkgname=uboot-asahi
 pkgver=2022.04_rc4.20220317
-pkgrel=1
+pkgrel=2
 pkgdesc='U-Boot for Apple Silicon Macs'
 _commit_id=102777230b057efa00fe39c7e545e13ddead1177
 _srcname=u-boot-${_commit_id}
 arch=('aarch64')
 url='http://asahilinux.org'
 license=('MIT' 'GPL2')
-depends=( 'asahi-scripts>=20220317' )
 makedepends=( bc imagemagick )
 source=(
   "u-boot-${_commit_id}.tar.gz::https://github.com/AsahiLinux/u-boot/archive/${_commit_id}.tar.gz"
 )
-install=uboot-asahi.install
 sha256sums=('ecd7966bbb10c40710790b717f63e814b5ee7ec2777680ea1f69896578ebe636')
 b2sums=('001bbf3d4aafd76a8ce1e56f194e97c3da988f966d82438dc54e1c7a6574da0c4a739bbfe22f6eb0c19cd7b99a7aecf8b13e5b936e51a4f30306ac85ec3f927b')
 
