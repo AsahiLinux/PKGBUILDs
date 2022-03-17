@@ -4,15 +4,17 @@
 buildarch=8
 
 _rcver=5.17
-_rcrel=6
+_rcrel=7
+_nextver=20220310
+_asahirel=2
 
 pkgbase=linux-asahi
-_commit_id=0672359c1817619fdc5619d2989894b56bad7d37
+_commit_id=c1fcb91bbcc8fd1b1f874e45f55cbba682351f3c
 _srcname=linux-${_commit_id}
 _kernelname=${pkgbase#linux}
 _desc="AArch64 Apple Silicon (M1 development kernel)"
-pkgver=${_rcver}.rc${_rcrel}.20220301
-pkgrel=4
+pkgver="${_rcver}.rc${_rcrel}.${_nextver}.${_asahirel}"
+pkgrel=1
 arch=('aarch64')
 url="http://www.kernel.org/"
 license=('GPL2')
@@ -25,10 +27,10 @@ source=(
   https://github.com/AsahiLinux/linux/archive/${_commit_id}.tar.gz
   config         # the main kernel config file
 )
-sha256sums=('a3ff7ca0cca7c72c157e7a6b7d56b8f4c26b287d1dc82611d454c19d7094918f'
-            '4723a3a37f05072ddccdf1b8480b83d9565560b37607da823f63248b2c644f2f')
-b2sums=('124071281c67198eadbdc3b4839b748592bc3d0b74e82ce1d9fcea80b5e216d2fc1e5a9df55afadebd5d881d0396044b61e3598e500bc1df565f02d695a65b01'
-        '6655084185e49c60f3f4f839174e3cd0d0037fd8520c990fdb3d023494bc49b29e348866942f35f2addfc65c5586250acd997a22d2c14522cc6f15949505ce93')
+sha256sums=('5fe5eb5f9c53e5ad068b2c3d72804d17003f8a760639cfefa59a7181ce614ac9'
+            'b05ea420879610f1c63695268b0cdef6e90466b609ee4e7b52ac83af2daf2974')
+b2sums=('901ef8975f88c1a129148378e2b766a45efc5d3bf52f391d18353afe6a061016d10f547be7ede57d0f4f17a588e84d677a26f8e8e1a99199abc35b5453702eb4'
+        '169f7fbd2f21086ca812a939f2db363ce7a828aeaa4ec0542f8d3168f278505b1672f14ec690b9c29fd7c07871bcf9c42775a632409ec46ca2257c5e01d6c602')
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
 export KBUILD_BUILD_TIMESTAMP="$(date -Ru${SOURCE_DATE_EPOCH:+d @$SOURCE_DATE_EPOCH})"
@@ -37,8 +39,7 @@ prepare() {
   cd $_srcname
 
   echo "Setting version..."
-  echo "-$pkgrel" > localversion.10-pkgrel
-  echo "${pkgbase#linux}" > localversion.20-pkgname
+  echo "-$_asahirel-$pkgrel" > localversion.10-pkgrel
 
   local src
   for src in "${source[@]}"; do
@@ -85,6 +86,9 @@ _package() {
 
   echo "Installing modules..."
   make INSTALL_MOD_PATH="$pkgdir/usr" INSTALL_MOD_STRIP=1 modules_install
+
+  echo "Installing device trees..."
+  install -Dt "$modulesdir/dtbs" arch/arm64/boot/dts/apple/*.dtb
 
   # remove build and source links
   rm "$modulesdir"/{source,build}
