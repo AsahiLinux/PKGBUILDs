@@ -1,0 +1,36 @@
+# Maintainer: Hector Martin <marcan@marcan.st>
+
+pkgname=xkeyboard-config-asahi
+pkgver=2.35.1_1
+pkgrel=1
+pkgdesc="X keyboard configuration files"
+arch=(any)
+license=('custom')
+url="https://github.com/AsahiLinux/xkeyboard-config"
+makedepends=('xorg-xkbcomp' 'libxslt' 'python' 'meson')
+provides=('xkbdata' 'xkeyboard-config')
+replaces=('xkbdata' 'xkeyboard-config')
+conflicts=('xkbdata' 'xkeyboard-config')
+source=(https://github.com/AsahiLinux/${pkgname%%-asahi}/archive/refs/tags/${pkgname%%-asahi}-${pkgver/_/-asahi}.tar.gz)
+sha256sums=('56c9668f24bf9bb1833208db8747a2a1280e0a5470b6bc9699b7e52ba8bb1002')
+_srcdir=${pkgname%%-asahi}-${pkgname%%-asahi}-${pkgver/_/-asahi}
+
+build() {
+  arch-meson "$_srcdir" build \
+	-D xkb-base="/usr/share/X11/xkb" \
+	-D compat-rules=true \
+	-D xorg-rules-symlinks=true
+
+  # Print config
+  meson configure build
+
+  ninja -C build
+ }
+ 
+ package() { 
+  DESTDIR="$pkgdir" ninja -C build install
+
+  install -m755 -d "${pkgdir}/var/lib/xkb"
+  install -m755 -d "${pkgdir}/usr/share/licenses/${pkgname}"
+  install -m644 "${_srcdir}"/COPYING "${pkgdir}/usr/share/licenses/${pkgname}/"
+}
