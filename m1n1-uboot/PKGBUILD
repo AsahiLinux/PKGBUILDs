@@ -1,31 +1,31 @@
 # Maintainer: Hector Martin <marcan@marcan.st>
 
 pkgname=m1n1-uboot
-pkgver=20220314
+pkgver=20220317
 pkgrel=1
 pkgdesc='Asahi Linux bootloader (m1n1 + U-Boot)'
 _artwork_commit_id=35626c31f5c5a8a884aaff93f864795026495742
-_m1n1_commit_id=3331d9e1e151ea9cdb09a41123389dde8acd260e
-_uboot_commit_id=1d634946fe1456262211c9db6bed487a81d5c4bf
+_m1n1_commit_id=v1.0
+_uboot_commit_id=72b0eca2e9c4ebe12f1a86769cee6f8ba5903527
 _artwork_srcname=artwork-${_artwork_commit_id}
-_m1n1_srcname=m1n1-${_m1n1_commit_id}
+_m1n1_srcname=m1n1-${_m1n1_commit_id##v}
 _uboot_srcname=u-boot-${_uboot_commit_id}
 arch=('aarch64')
 url='http://asahilinux.org'
 license=('MIT' 'GPL2')
 makedepends=( bc imagemagick )
 source=(
-  "https://github.com/AsahiLinux/artwork/archive/${_artwork_commit_id}.tar.gz"
-  "https://github.com/AsahiLinux/m1n1/archive/${_m1n1_commit_id}.tar.gz"
-  "https://github.com/AsahiLinux/u-boot/archive/${_uboot_commit_id}.tar.gz"
+  "artwork-${_artwork_commit_id}.tar.gz::https://github.com/AsahiLinux/artwork/archive/${_artwork_commit_id}.tar.gz"
+  "m1n1-${_m1n1_commit_id}.tar.gz::https://github.com/AsahiLinux/m1n1/archive/${_m1n1_commit_id}.tar.gz"
+  "u-boot-${_uboot_commit_id}.tar.gz::https://github.com/AsahiLinux/u-boot/archive/${_uboot_commit_id}.tar.gz"
 )
 install=m1n1-uboot.install
 sha256sums=('ffa129b5cae8debd4ffd97f7f1ac7f571c7ba4679793cd138918c2ae76a7103d'
-            '252b6ba0c9518b999e201814f01c19a813edec6fdd986425aaf027a12916d0c8'
-            '745b1c90db698c7916c7dffa6652e4be541f09f224a5adf6f928c8626784f6b1')
+            'a405f59d0677c38c590fd71e54784220e73f187e58b63f585bfca08406150f5f'
+            'a6c2ea4fbbfea55a05cf7ea840b1107e284547665838c1d7d811b3f22126ca78')
 b2sums=('26e9668f7c7393fec24b53b184ea0eabed4f46479c1aab26728d01c179091683cc4387ff83796bdcbb289376236faf9f651197b9fbba51e52540e58ebdc8bcc5'
-        '5be061c30634cac4fd404d851fa85f5dfc2ca4771e9f63a3bcf98a8cbbfa37aae07fb948578463f79baf6f010d77eb1b40e7fcca7448f166a28d55cc29d901c5'
-        '40854cdd4532faa7a50e3013e383a3d26cd01777b82a73ea1ff96a5e1a13bd08cdbdf1c0d20cd86e1664b1f902b45e82715edda9a510f5d01ef16a99e2283785')
+        'dfb6e057182957b0f93e27433b5e493566d1c77d24f028f55beee5235039d05afa33a44f591d4d385b4dd78648a1b97cd867a8a977a9328c927524e4fc69585f'
+        '33aa7c2deab18085f509513a23f71388702421315b08a64485cd8c05409529c0cd93e73c7f9386ca9c6e7a7be8e12771a32d8dfd33efbd86c5782cd9c843009c')
 
 prepare() {
   rm -rf "${srcdir}/$_m1n1_srcname"/artwork
