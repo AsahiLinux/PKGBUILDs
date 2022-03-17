@@ -1,0 +1,20 @@
+# Maintainer: Hector Martin <marcan@marcan.st>
+
+pkgname=asahi-calamares-configs
+pkgver=20220318
+pkgrel=1
+pkgdesc='Asahi Linux Calamares setup configs'
+arch=('any')
+url='http://asahilinux.org'
+license=('MIT')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/AsahiLinux/${pkgname}/archive/refs/tags/${pkgver}.tar.gz")
+sha256sums=('d76762f89d4edf07b063a75ee8e78cee91cf4b0e5d51ae2e077f8e41690e3d54')
+b2sums=('bd84517c3ec838f78366d326d684e52d411a29789a3325392d46d7593a09a2f1b6fdb0127e21041fed14a800d7a9796000ec28ace4ac3a54cf45c4b80153e581')
+
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  make PREFIX=/usr DESTDIR=${pkgdir} install
+
+  install -Dm644 "$srcdir/${pkgname}-${pkgver}/LICENSE" \
+    "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
