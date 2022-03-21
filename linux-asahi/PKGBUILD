@@ -69,7 +69,7 @@ _package() {
   depends=(coreutils kmod initramfs)
   optdepends=('crda: to set the correct wireless channels of your country'
               'linux-firmware: firmware images needed for some devices')
-  provides=(WIREGUARD-MODULE)
+  provides=(WIREGUARD-MODULE linux=${pkgver})
   replaces=(wireguard-arch)
 
   cd $_srcname
