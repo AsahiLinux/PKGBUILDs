@@ -1,36 +1,33 @@
-# AArch64 Apple Silicon (Asahi Linux)
-# Maintainer: Janne Grunau <j@jannau.net>
+# Maintainer: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
 
-buildarch=8
-
-_rcver=5.17
-_rcrel=7
-_nextver=20220310
-_asahirel=5
-
-pkgbase=linux-asahi
-_commit_id=asahi-${_nextver}-${_asahirel}
-_srcname=linux-${_commit_id}
-_kernelname=${pkgbase#linux}
-_desc="AArch64 Apple Silicon (M1 development kernel)"
-pkgver="${_rcver}.rc${_rcrel}.${_nextver}.${_asahirel}"
+pkgbase=linux
+pkgver=5.16.15.arch1
 pkgrel=1
-arch=('aarch64')
-url="http://www.kernel.org/"
-license=('GPL2')
-
+pkgdesc='Linux'
+_srctag=v${pkgver%.*}-${pkgver##*.}
+url="https://github.com/archlinux/linux/commits/$_srctag"
+arch=(x86_64)
+license=(GPL2)
 makedepends=(
-  bc dtc kmod libelf pahole cpio perl tar xz xmlto
+  bc kmod libelf pahole cpio perl tar xz
+  xmlto python-sphinx python-sphinx_rtd_theme graphviz imagemagick
+  git
 )
 options=('!strip')
+_srcname=archlinux-linux
 source=(
-  https://github.com/AsahiLinux/linux/archive/${_commit_id}.tar.gz
+  "$_srcname::git+https://github.com/archlinux/linux?signed#tag=$_srctag"
   config         # the main kernel config file
 )
-sha256sums=('d739cfdaaccf33c6b537a154b2f2d1bbfb437583470e9acdf7e2305c7903a7ac'
-            'b05ea420879610f1c63695268b0cdef6e90466b609ee4e7b52ac83af2daf2974')
-b2sums=('ca6019b8f65f44327fe1f636cc8b35cfe62f52299ec5b5c375387cc6f0615744ba6cda54a27d6e09c1e76674ca38fa05766a461a8f462a76306bb63b364773b5'
-        '169f7fbd2f21086ca812a939f2db363ce7a828aeaa4ec0542f8d3168f278505b1672f14ec690b9c29fd7c07871bcf9c42775a632409ec46ca2257c5e01d6c602')
+validpgpkeys=(
+  'ABAF11C65A2970B130ABE3C479BE3E4300411886'  # Linus Torvalds
+  '647F28654894E3BD457199BE38DBBDC86092693E'  # Greg Kroah-Hartman
+  'A2FF3A36AAA56654109064AB19802F8B0D70FC30'  # Jan Alexander Steffens (heftig)
+  'C7E7849466FE2358343588377258734B41C31549'  # David Runge <dvzrv@archlinux.org>
+)
+sha256sums=('SKIP'
+            '937b8c12653d7b18be9b5673e9fa7fba9512c2b5c947e5d489a5e0749a0a8253')
+
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
 export KBUILD_BUILD_TIMESTAMP="$(date -Ru${SOURCE_DATE_EPOCH:+d @$SOURCE_DATE_EPOCH})"
@@ -39,7 +36,9 @@ prepare() {
   cd $_srcname
 
   echo "Setting version..."
-  echo "-$_asahirel-$pkgrel" > localversion.10-pkgrel
+  scripts/setlocalversion --save-scmversion
+  echo "-$pkgrel" > localversion.10-pkgrel
+  echo "${pkgbase#linux}" > localversion.20-pkgname
 
   local src
   for src in "${source[@]}"; do
@@ -62,6 +61,7 @@ prepare() {
 build() {
   cd $_srcname
   make all
+  make htmldocs
 }
 
 _package() {
@@ -69,8 +69,8 @@ _package() {
   depends=(coreutils kmod initramfs)
   optdepends=('crda: to set the correct wireless channels of your country'
               'linux-firmware: firmware images needed for some devices')
-  provides=(WIREGUARD-MODULE)
-  replaces=(wireguard-arch)
+  provides=(VIRTUALBOX-GUEST-MODULES WIREGUARD-MODULE)
+  replaces=(virtualbox-guest-modules-arch wireguard-arch)
 
   cd $_srcname
   local kernver="$(<version)"
@@ -87,9 +87,6 @@ _package() {
   echo "Installing modules..."
   make INSTALL_MOD_PATH="$pkgdir/usr" INSTALL_MOD_STRIP=1 modules_install
 
-  echo "Installing device trees..."
-  install -Dt "$modulesdir/dtbs" arch/arm64/boot/dts/apple/*.dtb
-
   # remove build and source links
   rm "$modulesdir"/{source,build}
 }
@@ -98,8 +95,6 @@ _package-headers() {
   pkgdesc="Headers and scripts for building modules for the $pkgdesc kernel"
   depends=(pahole)
 
-  KARCH=arm64
-
   cd $_srcname
   local builddir="$pkgdir/usr/lib/modules/$(<version)/build"
 
@@ -107,20 +102,19 @@ _package-headers() {
   install -Dt "$builddir" -m644 .config Makefile Module.symvers System.map \
     localversion.* version vmlinux
   install -Dt "$builddir/kernel" -m644 kernel/Makefile
+  install -Dt "$builddir/arch/x86" -m644 arch/x86/Makefile
   cp -t "$builddir" -a scripts
 
   # required when STACK_VALIDATION is enabled
-  #install -Dt "$builddir/tools/objtool" tools/objtool/objtool
+  install -Dt "$builddir/tools/objtool" tools/objtool/objtool
 
   # required when DEBUG_INFO_BTF_MODULES is enabled
-  #install -Dt "$builddir/tools/bpf/resolve_btfids" tools/bpf/resolve_btfids/resolve_btfids
+  install -Dt "$builddir/tools/bpf/resolve_btfids" tools/bpf/resolve_btfids/resolve_btfids
 
   echo "Installing headers..."
   cp -t "$builddir" -a include
-
-  install -Dt "${builddir}/arch/${KARCH}" -m644 arch/${KARCH}/Makefile
-  install -Dt "${builddir}/arch/${KARCH}/kernel" -m644 arch/${KARCH}/kernel/asm-offsets.s
-  cp -t "${builddir}/arch/${KARCH}" -a arch/${KARCH}/include
+  cp -t "$builddir/arch/x86" -a arch/x86/include
+  install -Dt "$builddir/arch/x86/kernel" -m644 arch/x86/kernel/asm-offsets.s
 
   install -Dt "$builddir/drivers/md" -m644 drivers/md/*.h
   install -Dt "$builddir/net/mac80211" -m644 net/mac80211/*.h
@@ -142,8 +136,9 @@ _package-headers() {
   echo "Removing unneeded architectures..."
   local arch
   for arch in "$builddir"/arch/*/; do
-    [[ $arch = */{KARCH}/ ]] && continue
+    [[ $arch = */x86/ ]] && continue
     echo "Removing $(basename "$arch")"
+    rm -r "$arch"
   done
 
   echo "Removing documentation..."
@@ -178,7 +173,26 @@ _package-headers() {
   ln -sr "$builddir" "$pkgdir/usr/src/$pkgbase"
 }
 
-pkgname=("$pkgbase" "$pkgbase-headers")
+_package-docs() {
+  pkgdesc="Documentation for the $pkgdesc kernel"
+
+  cd $_srcname
+  local builddir="$pkgdir/usr/lib/modules/$(<version)/build"
+
+  echo "Installing documentation..."
+  local src dst
+  while read -rd '' src; do
+    dst="${src#Documentation/}"
+    dst="$builddir/Documentation/${dst#output/}"
+    install -Dm644 "$src" "$dst"
+  done < <(find Documentation -name '.*' -prune -o ! -type d -print0)
+
+  echo "Adding symlink..."
+  mkdir -p "$pkgdir/usr/share/doc"
+  ln -sr "$builddir/Documentation" "$pkgdir/usr/share/doc/$pkgbase"
+}
+
+pkgname=("$pkgbase" "$pkgbase-headers" "$pkgbase-docs")
 for _p in "${pkgname[@]}"; do
   eval "package_$_p() {
     $(declare -f "_package${_p#$pkgbase}")
