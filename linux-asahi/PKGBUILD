@@ -142,7 +142,7 @@ _package-headers() {
   echo "Removing unneeded architectures..."
   local arch
   for arch in "$builddir"/arch/*/; do
-    [[ $arch = */{$KARCH}/ ]] && continue
+    [[ $arch = */${KARCH}/ ]] && continue
     echo "Removing $(basename "$arch")"
     rm -r "$arch"
   done
