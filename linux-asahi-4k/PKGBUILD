@@ -1,0 +1,39 @@
+# Maintainer: Luke Eversfield <lukeversfield111@gmail.com>
+
+readonly pkgbase=linux-asahi-4k
+readonly _desc="AArch64 Apple Silicon (M1 development 4k pagesize kernel)"
+
+# needed since they would be overwritten
+source ../linux-asahi/PKGBUILD
+
+# add patch
+source+=(https://tg.st/u/0001-4k-iommu-patch-2022-03-11.patch)
+sha256sums+=('35c3e96a80400c81a694001fb25ad44b6372f97facc6a6e2cfa892005711ef56')
+b2sums+=('fbd20632936d5b326ee547c22668b27153f150c7c7d8d211a72c6cccedb9e2d30cbd5bf020df91120b160278f5893cc8cece966443e225439229512a9e273a40')
+
+prepare() {
+  cd $_srcname
+
+  echo "Setting version..."
+  # modify "version", otherwise conflicting with default kernel
+  echo "-$_asahirel-$pkgrel-4K" > localversion.10-pkgrel
+
+  local src
+  for src in "${source[@]}"; do
+    src="${src%%::*}"
+    src="${src##*/}"
+    [[ $src = *.patch ]] || continue
+    echo "Applying patch $src..."
+    patch -Np1 < "../$src"
+  done
+
+  echo "Setting config..."
+  cp ../config .config
+  # set 4K_PAGES config 
+  sed -i -e 's/CONFIG_ARM64_4K_PAGES=n/CONFIG_ARM64_4K_PAGES=y/g' -e 's/CONFIG_ARM64_16K_PAGES=y/CONFIG_ARM64_16K_PAGES=n/g' .config
+  make olddefconfig
+  diff -u ../config .config || :
+
+  make -s kernelrelease > version
+  echo "Prepared $pkgbase version $(<version)"
+}
