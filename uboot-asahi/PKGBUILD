@@ -12,13 +12,28 @@ license=('MIT' 'GPL2')
 makedepends=( bc imagemagick )
 source=(
   "u-boot-${_commit_id}.tar.gz::https://github.com/AsahiLinux/u-boot/archive/${_commit_id}.tar.gz"
+  "https://dev.alpinelinux.org/~mps/m1/apritzel-firt5-video.patch"
+  "https://dev.alpinelinux.org/~mps/m1/mps-u-boot-ter12x24.patch"
+  "enable-terminus-font.patch"
 )
-sha256sums=('d6b90132e7ededc6529f2516475218f76596900ace3082fcd027a0f01065553f')
-b2sums=('d9940e5196150fee0cd6fb61e4d4fab88d29df01511b6aa97b01c105581441e89c1ba7b7976d8cc096083c55480077c7732094ce36b0b3294d34ff8109d5400a')
+sha256sums=('d6b90132e7ededc6529f2516475218f76596900ace3082fcd027a0f01065553f'
+            '7640bbcf9e72ba42c4f3789fff817fa9df54243dfec378b1ca960ffcb5ddd2fa'
+            'e84ff241aeeda6eb585731251a235c909e232b02e92948966be1ee0a411b5734'
+            '9a4677a203dfc443134c7ef444a1624ff9fbab554e33c75c2066a02c5c7391b8')
+b2sums=('d9940e5196150fee0cd6fb61e4d4fab88d29df01511b6aa97b01c105581441e89c1ba7b7976d8cc096083c55480077c7732094ce36b0b3294d34ff8109d5400a'
+        'fe533ce8f95f2b58fab783b59d01b582c80e8efd18b82bfc6c0f5bb98f23125000877e19c21d8868b2da2e9a54a0c57450f38214e3db99fa199185c987ab93b7'
+        'adedaaa53402efea2013ac7d28328faae832bcac3eca8058f79703e508fca10f67b8d0700dfd878411455915efdf17acf08c9bc85dc0abb0f803bd1be255b844'
+        '11d29a3650b9d2dd92ca813a2ab70c52fbb9fac5b1cb627530b1be743d420aed119cf65c7a875161edcebdb3e31a5389fcf82a8ca8613efd38a1c1283944b6cb')
 
 prepare() {
   cd "${srcdir}/$_srcname"
+
+  patch -p1 -u -d . < "$srcdir/apritzel-firt5-video.patch"
+  patch -p1 -u -d . < "$srcdir/mps-u-boot-ter12x24.patch"
+
   make apple_m1_defconfig
+
+  patch -p1 -u -d . < "$srcdir/enable-terminus-font.patch"
 }
 
 build() {
