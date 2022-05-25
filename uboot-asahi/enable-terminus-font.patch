@@ -1,0 +1,18 @@
+diff --git a/.config b/.config
+index af9e3c9eb0..748fff68c1 100644
+--- a/.config
++++ b/.config
+@@ -1213,10 +1213,10 @@ CONFIG_NO_FB_CLEAR=y
+ CONFIG_PANEL=y
+ CONFIG_SIMPLE_PANEL=y
+ # CONFIG_VIDEO_FONT_4X6 is not set
+-CONFIG_VIDEO_FONT_8X16=y
++# CONFIG_VIDEO_FONT_8X16 is not set
+ # CONFIG_VIDEO_FONT_SUN12X22 is not set
+ # CONFIG_VIDEO_FONT_TER12X24 is not set
+-# CONFIG_VIDEO_FONT_TER16X32 is not set
++CONFIG_VIDEO_FONT_TER16X32=y
+
+ #
+ # TrueType Fonts
+
