@@ -1,15 +1,14 @@
 # Maintainer: Hector Martin <marcan@marcan.st>
 
 pkgname=asahi-desktop-meta
-pkgver=1
+pkgver=2
 pkgrel=1
 pkgdesc='Asahi Linux Plasma support meta package'
 url='https://www.asahilinux.org'
 arch=('any')
 license=('MIT')
-# Nothing yet; this is mostly here so we can pull in new support
-# packages for existing users in the future, e.g. for 3D accel or sound.
-depends=()
+install=asahi-desktop-meta.install
+depends=(bluedevil bluez-utils pulseaudio-bluetooth bluez-tools)
 
 # vim: ts=2 sw=2 et:
 
