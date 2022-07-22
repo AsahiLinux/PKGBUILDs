@@ -7,9 +7,9 @@ readonly _desc="AArch64 Apple Silicon (M1 development 4k pagesize kernel)"
 source ../linux-asahi/PKGBUILD
 
 # add patch
-source+=(https://tg.st/u/0001-4k-iommu-patch-2022-03-11.patch)
-sha256sums+=('35c3e96a80400c81a694001fb25ad44b6372f97facc6a6e2cfa892005711ef56')
-b2sums+=('fbd20632936d5b326ee547c22668b27153f150c7c7d8d211a72c6cccedb9e2d30cbd5bf020df91120b160278f5893cc8cece966443e225439229512a9e273a40')
+source+=(https://raw.githubusercontent.com/tpwrules/nixos-m1/b8f6e63dbdd98954c6c9e87b7a619a2b490b512a/nix/m1-support/kernel/sven-iommu-4k.patch)
+sha256sums+=('8db24e8bc5da49047b7a4d31f0c0b13b6621e6b85cf586dc9f70f5ec33533342')
+b2sums+=('74a7e93f3d2502f2858c6a8b570cc6f214d37efb603d973e375440f5aa309596b4244cafb3e257805b442d2e2cdbd5badc89e645d517a9bb5224b75fee8ab672')
 
 prepare() {
   cd $_srcname
