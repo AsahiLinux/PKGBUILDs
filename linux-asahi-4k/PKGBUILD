@@ -103,6 +103,7 @@ _package() {
 _package-headers() {
   pkgdesc="Headers and scripts for building modules for the $pkgdesc kernel"
   depends=(pahole)
+  conflicts=(linux-asahi-headers)
 
   KARCH=arm64
 
