@@ -1,0 +1,195 @@
+# AArch64 Apple Silicon (Asahi Linux)
+# Maintainer: David Manouchehri <david.manouchehri@riseup.net>
+# Contributor: Janne Grunau <j@jannau.net>
+
+buildarch=8
+
+_rcver=5.19
+_rcrel=7
+_asahirel=1
+pkgrel=1
+
+pkgbase=linux-asahi-4k
+#_commit_id=asahi-${_nextver}-${_asahirel}
+_commit_id=asahi-${_rcver}-rc${_rcrel}-${_asahirel}
+_srcname=linux-${_commit_id}
+_kernelname=${pkgbase#linux}
+_desc="AArch64 Apple Silicon (M1 development kernel)"
+pkgver="${_rcver}rc${_rcrel}.asahi${_asahirel}"
+#pkgver="${_rcver}.asahi${_asahirel}"
+arch=('aarch64')
+url="http://www.kernel.org/"
+license=('GPL2')
+
+makedepends=(
+  bc dtc kmod libelf pahole cpio perl tar xz xmlto
+)
+options=('!strip')
+source=(
+  https://github.com/AsahiLinux/linux/archive/${_commit_id}.tar.gz
+  config         # the main kernel config file
+  https://raw.githubusercontent.com/tpwrules/nixos-m1/b8f6e63dbdd98954c6c9e87b7a619a2b490b512a/nix/m1-support/kernel/sven-iommu-4k.patch
+)
+sha256sums=('8ba0ca8801505111eee3e69d0a989e061208676c6718d6853b4f8a83a53e338e'
+            '37dd8d65eb39f924ebe331541bf671535f1b6a0eec76b30506669529436a41dd'
+            '8db24e8bc5da49047b7a4d31f0c0b13b6621e6b85cf586dc9f70f5ec33533342')
+b2sums=('cddc6541b63cdbad1975814120ea277ca979652def52747ed3569b123afaaff69ff96a608b7dfe3d57bf7b4605c73d9d9242a4c289cf8a656fd53e567b81eaf8'
+        '06756acd7bd2004163ebc8d22257d6cd2cc7834f467795805d75283dd1e9a20df6f12a7a00d1aaacf141f56513a74e60c596176dbd8222d17a2e71f5b6795399'
+        '74a7e93f3d2502f2858c6a8b570cc6f214d37efb603d973e375440f5aa309596b4244cafb3e257805b442d2e2cdbd5badc89e645d517a9bb5224b75fee8ab672')
+export KBUILD_BUILD_HOST=archlinux
+export KBUILD_BUILD_USER=$pkgbase
+export KBUILD_BUILD_TIMESTAMP="$(date -Ru${SOURCE_DATE_EPOCH:+d @$SOURCE_DATE_EPOCH})"
+
+prepare() {
+  cd $_srcname
+
+  echo "Setting version..."
+  echo "-$_asahirel-$pkgrel" > localversion.10-pkgrel
+
+  local src
+  for src in "${source[@]}"; do
+    src="${src%%::*}"
+    src="${src##*/}"
+    [[ $src = *.patch ]] || continue
+    echo "Applying patch $src..."
+    patch -Np1 < "../$src"
+  done
+
+  echo "Setting config..."
+  cp ../config .config
+  make olddefconfig
+  diff -u ../config .config || :
+
+  make -s kernelrelease > version
+  echo "Prepared $pkgbase version $(<version)"
+}
+
+build() {
+  cd $_srcname
+  make -j`nproc` all
+}
+
+_package() {
+  pkgdesc="The $pkgdesc kernel and modules"
+  depends=(coreutils kmod initramfs)
+  optdepends=('crda: to set the correct wireless channels of your country'
+              'linux-firmware: firmware images needed for some devices')
+  provides=(WIREGUARD-MODULE linux=${pkgver})
+  replaces=(wireguard-arch)
+
+  cd $_srcname
+  local kernver="$(<version)"
+  local modulesdir="$pkgdir/usr/lib/modules/$kernver"
+
+  echo "Installing boot image..."
+  # systemd expects to find the kernel here to allow hibernation
+  # https://github.com/systemd/systemd/commit/edda44605f06a41fb86b7ab8128dcf99161d2344
+  install -Dm644 "$(make -s image_name)" "$modulesdir/vmlinuz"
+
+  # Used by mkinitcpio to name the kernel
+  echo "$pkgbase" | install -Dm644 /dev/stdin "$modulesdir/pkgbase"
+
+  echo "Installing modules..."
+  make INSTALL_MOD_PATH="$pkgdir/usr" INSTALL_MOD_STRIP=1 modules_install
+
+  echo "Installing device trees..."
+  install -Dt "$modulesdir/dtbs" arch/arm64/boot/dts/apple/*.dtb
+
+  # remove build and source links
+  rm "$modulesdir"/{source,build}
+}
+
+_package-headers() {
+  pkgdesc="Headers and scripts for building modules for the $pkgdesc kernel"
+  depends=(pahole)
+
+  KARCH=arm64
+
+  cd $_srcname
+  local builddir="$pkgdir/usr/lib/modules/$(<version)/build"
+
+  echo "Installing build files..."
+  install -Dt "$builddir" -m644 .config Makefile Module.symvers System.map \
+    localversion.* version vmlinux
+  install -Dt "$builddir/kernel" -m644 kernel/Makefile
+  cp -t "$builddir" -a scripts
+
+  # required when STACK_VALIDATION is enabled
+  #install -Dt "$builddir/tools/objtool" tools/objtool/objtool
+
+  # required when DEBUG_INFO_BTF_MODULES is enabled
+  #install -Dt "$builddir/tools/bpf/resolve_btfids" tools/bpf/resolve_btfids/resolve_btfids
+
+  echo "Installing headers..."
+  cp -t "$builddir" -a include
+
+  install -Dt "${builddir}/arch/${KARCH}" -m644 arch/${KARCH}/Makefile
+  install -Dt "${builddir}/arch/${KARCH}/kernel" -m644 arch/${KARCH}/kernel/asm-offsets.s
+  cp -t "${builddir}/arch/${KARCH}" -a arch/${KARCH}/include
+
+  install -Dt "$builddir/drivers/md" -m644 drivers/md/*.h
+  install -Dt "$builddir/net/mac80211" -m644 net/mac80211/*.h
+
+  # https://bugs.archlinux.org/task/13146
+  install -Dt "$builddir/drivers/media/i2c" -m644 drivers/media/i2c/msp3400-driver.h
+
+  # https://bugs.archlinux.org/task/20402
+  install -Dt "$builddir/drivers/media/usb/dvb-usb" -m644 drivers/media/usb/dvb-usb/*.h
+  install -Dt "$builddir/drivers/media/dvb-frontends" -m644 drivers/media/dvb-frontends/*.h
+  install -Dt "$builddir/drivers/media/tuners" -m644 drivers/media/tuners/*.h
+
+  # https://bugs.archlinux.org/task/71392
+  install -Dt "$builddir/drivers/iio/common/hid-sensors" -m644 drivers/iio/common/hid-sensors/*.h
+
+  echo "Installing KConfig files..."
+  find . -name 'Kconfig*' -exec install -Dm644 {} "$builddir/{}" \;
+
+  echo "Removing unneeded architectures..."
+  local arch
+  for arch in "$builddir"/arch/*/; do
+    [[ $arch = */${KARCH}/ ]] && continue
+    echo "Removing $(basename "$arch")"
+    rm -r "$arch"
+  done
+
+  echo "Removing documentation..."
+  rm -r "$builddir/Documentation"
+
+  echo "Removing broken symlinks..."
+  find -L "$builddir" -type l -printf 'Removing %P\n' -delete
+
+  echo "Removing loose objects..."
+  find "$builddir" -type f -name '*.o' -printf 'Removing %P\n' -delete
+
+  echo "Stripping build tools..."
+  local file
+  while read -rd '' file; do
+    case "$(file -bi "$file")" in
+      application/x-sharedlib\;*)      # Libraries (.so)
+        strip -v $STRIP_SHARED "$file" ;;
+      application/x-archive\;*)        # Libraries (.a)
+        strip -v $STRIP_STATIC "$file" ;;
+      application/x-executable\;*)     # Binaries
+        strip -v $STRIP_BINARIES "$file" ;;
+      application/x-pie-executable\;*) # Relocatable binaries
+        strip -v $STRIP_SHARED "$file" ;;
+    esac
+  done < <(find "$builddir" -type f -perm -u+x ! -name vmlinux -print0)
+
+  echo "Stripping vmlinux..."
+  strip -v $STRIP_STATIC "$builddir/vmlinux"
+
+  echo "Adding symlink..."
+  mkdir -p "$pkgdir/usr/src"
+  ln -sr "$builddir" "$pkgdir/usr/src/$pkgbase"
+}
+
+pkgname=("$pkgbase" "$pkgbase-headers")
+for _p in "${pkgname[@]}"; do
+  eval "package_$_p() {
+    $(declare -f "_package${_p#$pkgbase}")
+    _package${_p#$pkgbase}
+  }"
+done
+
+# vim:set ts=8 sts=2 sw=2 et:
