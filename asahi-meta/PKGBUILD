@@ -12,6 +12,7 @@ package() {
   # Put depends in package() to avoid unecessary build dependencies
   depends=(
     'linux-asahi' 'uboot-asahi' 'm1n1' 'asahi-scripts' 'asahilinux-keyring' 'asahi-fwextract'
+    'alsa-ucm-conf-asahi'
   )
 }
 
