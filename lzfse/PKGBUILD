@@ -1,0 +1,27 @@
+pkgname=lzfse
+pkgver=1.0
+pkgrel=1
+pkgdesc='LZFSE compression library and command line tool'
+arch=('aarch64')
+url='https://github.com/lzfse/lzfse'
+license=('BSD')
+source=("https://github.com/$pkgname/$pkgname/archive/refs/tags/$pkgname-$pkgver.tar.gz")
+sha512sums=('9d7ca44e6d3d2bdf4b82b0eb66c14922369b8b6fe2cf891187a77c6708b8d26c2c1b2ccddec6059e85dbbbb37c497419549f02812b5f34d06238ac246a8cf912')
+
+build() {
+    cmake -B build -S "${pkgname}-${pkgname}-${pkgver}" \
+        -DCMAKE_BUILD_TYPE='None' \
+        -DCMAKE_INSTALL_PREFIX='/usr' \
+        -Wno-dev
+    cmake --build build
+}
+
+check() {
+    ctest --test-dir build --output-on-failure
+}
+
+package() {
+    DESTDIR="$pkgdir" cmake --install build
+}
+
+# vim:set ts=2 sw=2 et:
