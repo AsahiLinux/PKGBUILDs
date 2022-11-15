@@ -6,7 +6,7 @@ buildarch=8
 _rcver=6.1
 _rcrel=5
 _asahirel=6
-pkgrel=1
+pkgrel=2
 
 _m1n1_version=1.1.8
 
@@ -55,24 +55,32 @@ prepare() {
     patch -Np1 < "../$src"
   done
 
-  echo "Setting config..."
-  cp ../config .config
-  make olddefconfig
-  diff -u ../config .config || :
-  cp .config .config-base
+  echo "Creating build directories..."
+  mkdir -p build/base build/edge
 
-  make -s kernelrelease > version
+  echo "Setting config (base)..."
+  cp ../config build/base/.config
+  make olddefconfig prepare O=$PWD/build/base
+  diff -u ../config build/base/.config || :
+  make -s kernelrelease O=$PWD/build/base > build/base/version
 
-  cat .config-base ../config.edge > .config-edge
-  KCONFIG_CONFIG=.config-edge make olddefconfig
+  echo "Setting config (edge)..."
+  cat build/base/.config ../config.edge > build/edge/.config
+  make olddefconfig prepare O=$PWD/build/edge
+  make -s kernelrelease O=$PWD/build/edge > build/edge/version
 
-  echo "Prepared $pkgbase version $(<version)"
+  echo "Prepared $pkgbase version $(<build/base/version)"
 }
 
 build() {
   cd $_srcname
-  cp .config-base .config
-  make all
+  echo "Building base..."
+  make oldconfig all O=$PWD/build/base
+  echo "Copying objects..."
+  touch $PWD/build/edge/.config
+  cp -urT $PWD/build/{base,edge}
+  echo "Building edge..."
+  make oldconfig all O=$PWD/build/edge
 }
 
 _package_kernel() {
@@ -83,22 +91,22 @@ _package_kernel() {
   provides=(WIREGUARD-MODULE linux=${pkgver})
   replaces=(wireguard-arch)
 
-  local kernver="$1"
+  local kernver="$(<$O/version)"
   local modulesdir="$pkgdir/usr/lib/modules/$kernver"
 
   echo "Installing boot image..."
   # systemd expects to find the kernel here to allow hibernation
   # https://github.com/systemd/systemd/commit/edda44605f06a41fb86b7ab8128dcf99161d2344
-  install -Dm644 arch/arm64/boot/Image "$modulesdir/vmlinuz"
+  install -Dm644 "$O"/arch/arm64/boot/Image "$modulesdir/vmlinuz"
 
   # Used by mkinitcpio to name the kernel
-  echo "$pkgbase" | install -Dm644 /dev/stdin "$modulesdir/pkgbase"
+  echo "$1" | install -Dm644 /dev/stdin "$modulesdir/pkgbase"
 
   echo "Installing modules..."
-  make INSTALL_MOD_PATH="$pkgdir/usr" INSTALL_MOD_STRIP=1 modules_install
+  make O="$O" INSTALL_MOD_PATH="$pkgdir/usr" INSTALL_MOD_STRIP=1 modules_install
 
   echo "Installing device trees..."
-  install -Dt "$modulesdir/dtbs" arch/arm64/boot/dts/apple/*.dtb
+  install -Dt "$modulesdir/dtbs" "$O"/arch/arm64/boot/dts/apple/*.dtb
 
   # remove build and source links
   rm "$modulesdir"/{source,build}
@@ -106,23 +114,14 @@ _package_kernel() {
 
 _package() {
   cd $_srcname
-  if ! cmp .config-base .config; then
-    cp .config-base .config
-    make oldconfig
-    make all
-  fi
-  _package_kernel "$(<version)"
+  export O="$PWD/build/base"
+  _package_kernel "$pkgbase"
 }
 
 _package-edge() {
   cd $_srcname
-  if ! cmp .config-edge .config; then
-    cp .config-edge .config
-    make oldconfig
-    make all
-    make -s kernelrelease > version-edge
-  fi
-  _package_kernel "$(<version-edge)"
+  export O="$PWD/build/edge"
+  _package_kernel "$pkgbase-edge"
 }
 
 _package-headers() {
@@ -132,11 +131,12 @@ _package-headers() {
   KARCH=arm64
 
   cd $_srcname
+  O=build/base
   local builddir="$pkgdir/usr/lib/modules/$(<version)/build"
 
   echo "Installing build files..."
-  install -Dt "$builddir" -m644 .config Makefile Module.symvers System.map \
-    localversion.* version vmlinux
+  install -Dt "$builddir" -m644 $O/.config $O/Makefile $O/Module.symvers $O/System.map \
+    localversion.* $O/version $O/vmlinux
   install -Dt "$builddir/kernel" -m644 kernel/Makefile
   cp -t "$builddir" -a scripts
 
@@ -147,11 +147,11 @@ _package-headers() {
   #install -Dt "$builddir/tools/bpf/resolve_btfids" tools/bpf/resolve_btfids/resolve_btfids
 
   echo "Installing headers..."
-  cp -t "$builddir" -a include
+  cp -t "$builddir" -a include $O/include
 
   install -Dt "${builddir}/arch/${KARCH}" -m644 arch/${KARCH}/Makefile
-  install -Dt "${builddir}/arch/${KARCH}/kernel" -m644 arch/${KARCH}/kernel/asm-offsets.s
-  cp -t "${builddir}/arch/${KARCH}" -a arch/${KARCH}/include
+  install -Dt "${builddir}/arch/${KARCH}/kernel" -m644 $O/arch/${KARCH}/kernel/asm-offsets.s
+  cp -t "${builddir}/arch/${KARCH}" -a arch/${KARCH}/include $O/arch/${KARCH}/include
 
   install -Dt "$builddir/drivers/md" -m644 drivers/md/*.h
   install -Dt "$builddir/net/mac80211" -m644 net/mac80211/*.h
