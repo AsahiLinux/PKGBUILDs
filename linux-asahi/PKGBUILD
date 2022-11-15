@@ -5,8 +5,8 @@ buildarch=8
 
 _rcver=6.1
 _rcrel=5
-_asahirel=6
-pkgrel=2
+_asahirel=7
+pkgrel=1
 
 _m1n1_version=1.1.8
 
@@ -30,12 +30,12 @@ source=(
   config         # the main kernel config file
   config.edge    # overrides for linux-asahi-edge
 )
-sha256sums=('9e9da7e9997512a2c1565119d0954a32c4e36102b0f02e75331f7d290d311aaf'
+sha256sums=('b1b886c1a9440ddcfbf7579ff6e03c0da68ab0eaa39dd65a8d2c4297a0b047aa'
             'e623ffe0ec026631705492ebac7d4c82cd72ede808f8079e7f4e79efa754229f'
-            '4140202d33866ce73c43c697434a363186aa3f4fe8f4df4785552ca2df2c8e86')
-b2sums=('1004d6986969c2a158ad822a9adcd9b5d7c40b4c4673999442d7d35a88a0661e5eab7e4283a2f1849c7d12b48e58442cb9f7b8d7974931a8bebb34bb67928649'
+            '96c170618ab098ae267f86813dc63be7d21da0cbac3afb075a43df2d0701bd4b')
+b2sums=('14f67158b2f396df658905827933ad8c615ce51423c18b51164167ca3e4f98149e089693c6ac46cc8dedd76282df20d88f0ba7d3b4ed53bf29771509203d680c'
         '6e15c93b2eba24e24c2644fa2217bfcc55e156e44368909854c49d613f2fbbe1259767377f06398f7eb62fa71d18f94257ac577a4fa1ca77065a8159ebaecbb6'
-        'd97acf64e059fc9ddeafcf20192836fd534105bb525d1e22ca604d0da73e5db39b0eec85dbbee0f56474575c0101c64798e01ec09da7233ac155e292c3a908c8')
+        '5db9fcdb6ad67eb31845b2d7126228818f468839a55a1fd2d0638ae44954b64b1173da6b1fcdcd46d2e8b99d896bc573b646dcb2152020428e80c4ff8d23f13c')
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
 export KBUILD_BUILD_TIMESTAMP="$(date -Ru${SOURCE_DATE_EPOCH:+d @$SOURCE_DATE_EPOCH})"
@@ -77,8 +77,9 @@ build() {
   echo "Building base..."
   make oldconfig all O=$PWD/build/base
   echo "Copying objects..."
-  touch $PWD/build/edge/.config
-  cp -urT $PWD/build/{base,edge}
+  touch build/edge/.config
+  cp -urT build/{base,edge}
+  rm build/edge/init/version.o
   echo "Building edge..."
   make oldconfig all O=$PWD/build/edge
 }
