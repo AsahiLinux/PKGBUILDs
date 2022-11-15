@@ -75,13 +75,17 @@ prepare() {
 build() {
   cd $_srcname
   echo "Building base..."
-  make oldconfig all O=$PWD/build/base
+  make all O=$PWD/build/base
   echo "Copying objects..."
-  touch build/edge/.config
+  cp build/edge/.config{,.save}
+  touch build/base/.config
   cp -urT build/{base,edge}
   rm build/edge/init/version.o
+  make O=$PWD/build/edge oldconfig prepare
+  cp build/edge/.config{.save,}
   echo "Building edge..."
-  make oldconfig all O=$PWD/build/edge
+  make O=$PWD/build/edge oldconfig prepare
+  make O=$PWD/build/edge all
 }
 
 _package_kernel() {
