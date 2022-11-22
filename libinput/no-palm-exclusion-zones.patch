@@ -1,0 +1,15 @@
+diff --git a/src/evdev-mt-touchpad.c b/src/evdev-mt-touchpad.c
+index ea9c8f1e..019ed115 100644
+--- a/src/evdev-mt-touchpad.c
++++ b/src/evdev-mt-touchpad.c
+@@ -3458,8 +3458,8 @@ tp_init_palmdetect(struct tp_dispatch *tp,
+ 				    ABS_MT_TOOL_TYPE))
+ 		tp->palm.use_mt_tool = true;
+ 
+-	if (!tp_is_tablet(device))
+-		tp_init_palmdetect_edge(tp, device);
++/*	if (!tp_is_tablet(device))
++		tp_init_palmdetect_edge(tp, device); */
+ 	tp_init_palmdetect_pressure(tp, device);
+ 	tp_init_palmdetect_size(tp, device);
+ }
