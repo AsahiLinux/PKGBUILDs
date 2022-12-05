@@ -197,6 +197,9 @@ _package-headers() {
   echo "Removing loose objects..."
   find "$builddir" -type f -name '*.o' -printf 'Removing %P\n' -delete
 
+  echo "Removing cmd files..."
+  find "$builddir" -type f -name '*.cmd' -printf 'Removing %P\n' -delete
+
   echo "Stripping build tools..."
   local file
   while read -rd '' file; do
