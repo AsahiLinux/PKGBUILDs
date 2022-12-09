@@ -14,8 +14,8 @@ pkgname=(
 	"mesa$_suffix"
 )
 pkgdesc="An open-source implementation of the OpenGL specification"
-_commit=b6723aca3db43ac18d8fd7269ba9527edcdc2e67
-pkgver=23.0.0_pre20221207
+_commit=7be6b639a915d66fab9069a2b42e6194ed0d1fb2
+pkgver=23.0.0_pre20221209
 pkgrel=1
 arch=('aarch64')
 makedepends=('python-mako' 'libxml2' 'libx11' 'xorgproto' 'libdrm' 'libxshmfence' 'libxxf86vm'
@@ -27,7 +27,7 @@ license=('custom')
 options=('debug' '!lto')
 source=(https://gitlab.freedesktop.org/asahi/mesa/-/archive/$_commit/mesa-$_commit.tar.gz
         LICENSE)
-sha512sums=('c30a6ec69675a4b02b4b57487ef84d2c509753b1a22c8ddb8747fe06e0008023855c14a97d614c7f4706a6ccf6fd731e76d61274106b46cb3f4edb760a17bed1'
+sha512sums=('cdde41b67b77edab5432c8d4bb8dfef05f4ec0ed61826830ea35e64424016f39df2bda53a7708e1ab3fca8c2f8e003bdc770c65a18d32af2434e9e7180004033'
             'f9f0d0ccf166fe6cb684478b6f1e1ab1f2850431c06aa041738563eb1808a004e52cdec823c103c9e180f03ffc083e95974d291353f0220fe52ae6d4897fecc7')
 
 prepare() {
