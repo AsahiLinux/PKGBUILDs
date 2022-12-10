@@ -2,7 +2,7 @@
 
 pkgname=libinput
 pkgver=1.22.0
-pkgrel=1.1
+pkgrel=1.2
 pkgdesc="Input device management and event handling library"
 url="https://gitlab.freedesktop.org/libinput"
 arch=(x86_64)
@@ -15,13 +15,19 @@ optdepends=('gtk4: libinput debug-gui'
             'python-libevdev: libinput measure')
 options=(debug)
 source=(https://gitlab.freedesktop.org/libinput/libinput/-/archive/$pkgver/$pkgname-$pkgver.tar.bz2
-	0001-quirks-Add-Apple-MTP-touchpad-quirk.patch)
+	0001-quirks-Add-Apple-MTP-touchpad-quirk.patch
+	0001-evdev-Enable-natural-scrolling-by-default-on-Apple.patch)
 sha256sums=('b9204a860b4f6f9b2587c484f67a21fbdedd01a97db1f983b0b51cb7bdd428aa'
-            'c021958e9fab4dab2572311b56eabdc14088af077978e9023a9ca9bbe8b2b90a')
+            'c021958e9fab4dab2572311b56eabdc14088af077978e9023a9ca9bbe8b2b90a'
+            '9297b559cccfdae2e009b34c29c980af3bce1453eb3866976216594a0c073296')
 #validpgpkeys=('3C2C43D9447D5938EF4551EBE23B7E70B467F0BF') # Peter Hutterer (Who-T) <office@who-t.net>
 
 build() {
-  ( cd $pkgname-$pkgver && patch -p1 -i ../0001-quirks-Add-Apple-MTP-touchpad-quirk.patch )
+  (
+	cd $pkgname-$pkgver &&
+	patch -p1 -i ../0001-quirks-Add-Apple-MTP-touchpad-quirk.patch &&
+	patch -p1 -i ../0001-evdev-Enable-natural-scrolling-by-default-on-Apple.patch
+  )
 
   arch-meson $pkgname-$pkgver build \
     -D udev-dir=/usr/lib/udev \
