@@ -145,7 +145,7 @@ _package-headers() {
   local builddir="$pkgdir/usr/lib/modules/$(<${O}/version)/build"
 
   echo "Installing build files..."
-  install -Dt "$builddir" -m644 $O/.config $O/Makefile $O/Module.symvers $O/System.map \
+  install -Dt "$builddir" -m644 $O/.config Makefile $O/Module.symvers $O/System.map \
     localversion.* $O/version $O/vmlinux
   install -Dt "$builddir/kernel" -m644 kernel/Makefile
   cp -t "$builddir" -a scripts
