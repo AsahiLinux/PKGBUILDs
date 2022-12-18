@@ -6,7 +6,7 @@ buildarch=8
 _rcver=6.1
 #_rcrel=
 _asahirel=2
-pkgrel=1
+pkgrel=2
 
 _m1n1_version=1.2.2
 
@@ -148,7 +148,7 @@ _package-headers() {
   install -Dt "$builddir" -m644 $O/.config Makefile $O/Module.symvers $O/System.map \
     localversion.* $O/version $O/vmlinux
   install -Dt "$builddir/kernel" -m644 kernel/Makefile
-  cp -t "$builddir" -a scripts
+  cp -t "$builddir" -a scripts $O/scripts
 
   # required when STACK_VALIDATION is enabled
   #install -Dt "$builddir/tools/objtool" tools/objtool/objtool
