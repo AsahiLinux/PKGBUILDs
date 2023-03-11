@@ -14,10 +14,10 @@ pkgname=(
 	"mesa$_suffix"
 )
 pkgdesc="An open-source implementation of the OpenGL specification"
-_asahiver=20221229
+_asahiver=20230311
 _commit=asahi-$_asahiver
-pkgver=23.0.0_pre$_asahiver
-pkgrel=2
+pkgver=23.1.0_pre$_asahiver
+pkgrel=1
 arch=('aarch64')
 makedepends=('python-mako' 'libxml2' 'libx11' 'xorgproto' 'libdrm' 'libxshmfence' 'libxxf86vm'
              'libxdamage' 'libvdpau' 'libva' 'wayland' 'wayland-protocols' 'zstd' 'elfutils' 'llvm'
@@ -28,7 +28,7 @@ license=('custom')
 options=('debug' '!lto')
 source=(https://gitlab.freedesktop.org/asahi/mesa/-/archive/$_commit/mesa-$_commit.tar.gz
         LICENSE)
-sha512sums=('6ac3d0cf13ed0a8082a0d96a306eaa17a09aedc5d19a5fb40e97dceba3e0ef48fe23a4e73f0097cccce7e5dfb8ae02d5ec1da731b5a1376db9610f6523599562'
+sha512sums=('c0db62c544d169e6131624031c038f58e6a2f54a0ab64e6bdd63d72274bb19796297b8f7a55357999ba88b8c9d875e28bb06b68ca680fdb0b601a3f184158168'
             'f9f0d0ccf166fe6cb684478b6f1e1ab1f2850431c06aa041738563eb1808a004e52cdec823c103c9e180f03ffc083e95974d291353f0220fe52ae6d4897fecc7')
 
 prepare() {
@@ -66,7 +66,8 @@ build() {
     -D osmesa=true \
     -D shared-glapi=enabled \
     -D microsoft-clc=disabled \
-    -D valgrind=enabled
+    -D valgrind=enabled \
+    -D android-libbacktrace=disabled
 
   # Print config
   meson configure build
