@@ -4,11 +4,11 @@
 buildarch=8
 
 _rcver=6.2
-_rcrel=3
-_asahirel=7
+#_rcrel=3
+_asahirel=5
 pkgrel=1
 
-_m1n1_version=1.2.4
+_m1n1_version=1.2.5
 
 pkgbase=linux-asahi
 #_commit_id=asahi-${_nextver}-${_asahirel}
@@ -30,10 +30,10 @@ source=(
   config         # the main kernel config file
   config.edge    # overrides for linux-asahi-edge
 )
-sha256sums=('2c370e3e346959baa98ced39be04c85e7f52c212c7d0ee86bda4e61b3e523c8b'
+sha256sums=('8fecbbc29eaa231eb62b3afd42500058cf331679207f56bb9308f44c5ab00248'
             '7e63cbe5448438bcc208ac9630ba4c23634ae9b1cbed0188155d398834f865fd'
             'f13f40ff0f8dd12761f714f035dcb137798adf3131086a419cfb48c859379906')
-b2sums=('5b731b5a73556c352806551652734179525d06a65f7e67d000da39d9c367fd4161020e97724a5855c76e2869ed2e0ecf2c6bac7d5c05224d13516e62b865fa9c'
+b2sums=('a4eecfe80050165ff3f6927137f662a3ca71b45dfcd3fe0339b8e7d9b21de5f75124d94a5789df6b994f63db39eaa29b81f55b660d9d2d72a9db55ca53d5b2d4'
         '501ee8c5f1994785c974f71c16ca86f6bcf42f4403ce2aeca7cdba211ba79e3c885b242fc9f8aa2a375d0570d2ce8723054b8327aab08b7df5fe23ec158f320a'
         'a24dd662e938a0ddd3c61df3307a1b301d2b01ed8fe4bc77d0599b55ce38e028237c11d70b3554f0c47572a3cce6b96cb5c4531031f5ca1f8056f9bb27b957d1')
 export KBUILD_BUILD_HOST=archlinux
@@ -59,11 +59,6 @@ prepare() {
   sed -i -e s/blacklist/blocklist/ \
     -e s/whitelist/allowlist/ \
     rust/Makefile
-
-  # Fixes for Rust 1.66.0
-  sed -i -e 's/rustc_allocator_nounwind/rustc_nounwind/g' rust/alloc/alloc.rs
-  sed -i -e 's/const Unpin/Unpin/' rust/alloc/boxed.rs
-  sed -i -e '/^pub unsafe trait RawDeviceId/i #[const_trait]' rust/kernel/driver.rs
 
   echo "Creating build directories..."
   mkdir -p build/base build/edge
