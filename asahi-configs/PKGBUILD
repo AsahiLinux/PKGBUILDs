@@ -1,25 +1,27 @@
 # Maintainer: Hector Martin <marcan@marcan.st>
 
 pkgname=asahi-configs
-pkgver=20230105
-pkgrel=1
+pkgver=20230313
+pkgrel=2
 pkgdesc='Asahi Linux misc configs'
 arch=('any')
 url='http://asahilinux.org'
 license=('MIT')
-source=(asahi.sh kcminputrc 20-natural-scrolling.conf 30-modeset.conf)
+source=(asahi.sh kcminputrc kwinrc 20-natural-scrolling.conf 30-modeset.conf)
 sha256sums=('1cff5ff65981d37987aa11bca89631f8bb39a1e550cc46fc83faf2b53083416b'
             '7cc32f5959f0ca83de33c684e2fa615cbccf50b0ed4d0cc81cd5c639f6619ada'
+            'b459b0c05820ee83e2909d1f0af36b2d5b6b75f2669139d5152fe47f23ff06ab'
             'f66c63eeb5718c8e1c606ed02caffdc0dce73a26ec74f253a31e221bd15341c8'
             '8bfed14ace9939474d9c4567583eb0d90721f29ffa8176ec3632afb18eb70fd4')
 b2sums=('e3a0d3f7ebe854d9ffc9f2200815cd1bb2f055dd3854e291498af7ca93e7eba521d91519abca17b850629ed16c7cc861b7b9bd1b12e450b6cd17bf3f838078e2'
         '5ce56d824acea49250a5f840ed47fb0edf46095fb4fd44cfae994b3cb6e92f1919d2aa9d704206bd513d4615a05cf1a6b1bf12c2b31f8f82f4618ccc554c72ed'
+        'c29fb5fed03012e134a0d24f43ea9f78c19f17a47cc5476c97740a0df3b7d3811569ad6727c367095821762001d9acb4026f2425e9df0f3bcfab1f359a67a61a'
         '2a1baad2a0eb37d5c3c92266dbaa851f101d9dbff9ba7e6d1571f1875abb99a893ff7994c6afa258974ea3c93f25cace47ecda4895cc40ca05f8ceae30d5528b'
         '7e92f9ea7f1b056c5170dd8bffad4e0399e9b1bd09cf5d26be257278359afe96f951def5db714f1f65d535862096d76f1ad2be56e73f50f54848b4fbbf8777fd')
-backup=(etc/profile.d/asahi.sh etc/xdg/kcminputrc etc/X11/xorg.conf.d/20-natural-scrolling.conf etc/X11/xorg.conf.d/30-modeset.conf)
+backup=(etc/profile.d/asahi.sh etc/xdg/kcminputrc etc/xdg/kwinrc etc/X11/xorg.conf.d/20-natural-scrolling.conf etc/X11/xorg.conf.d/30-modeset.conf)
 
 package() {
-  install -Dm644 -t "$pkgdir/etc/xdg" kcminputrc
+  install -Dm644 -t "$pkgdir/etc/xdg" kcminputrc kwinrc
   install -Dm644 -t "$pkgdir/etc/X11/xorg.conf.d" 20-natural-scrolling.conf 30-modeset.conf
   install -Dm644 -t "$pkgdir/etc/profile.d" asahi.sh
 }
