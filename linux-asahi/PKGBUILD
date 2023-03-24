@@ -6,7 +6,7 @@ buildarch=8
 _rcver=6.2
 #_rcrel=3
 _asahirel=11
-pkgrel=1
+pkgrel=2
 
 _m1n1_version=1.2.6
 
@@ -221,6 +221,14 @@ _package-headers() {
   echo "Adding symlink..."
   mkdir -p "$pkgdir/usr/src"
   ln -sr "$builddir" "$pkgdir/usr/src/$pkgbase"
+
+  O=build/edge
+  local builddir2="$pkgdir/usr/lib/modules/$(<${O}/version)/build"
+  mkdir -p $builddir2
+  cp -rl $builddir/* $builddir2
+  cp --remove-destination $O/{.config,System.map,version,Module.symvers,vmlinux} $builddir2
+  rm -rf $builddir2/include/config
+  cp -r $O/include/config $builddir2/include/config
 }
 
 pkgname=("$pkgbase" "$pkgbase-headers" "$pkgbase-edge")
