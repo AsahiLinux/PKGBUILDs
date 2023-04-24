@@ -58,6 +58,7 @@ prepare() {
   # Fix for newer bindgen versions
   sed -i -e s/blacklist/blocklist/ \
     -e s/whitelist/allowlist/ \
+    -e s/--size_t-is-usize// \
     rust/Makefile
 
   echo "Creating build directories..."
