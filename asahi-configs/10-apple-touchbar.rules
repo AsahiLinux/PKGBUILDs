@@ -1,0 +1,2 @@
+ACTION=="add|change", KERNEL=="event[0-9]*", DRIVERS=="apple-z2", ENV{LIBINPUT_IGNORE_DEVICE}="1"
+
