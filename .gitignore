@@ -1,6 +1,7 @@
 *.tar.gz
 *.tar.xz
 *.tar.bz2
+*.tar.zst
 *.sig
 pkg
 src
