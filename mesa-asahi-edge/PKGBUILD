@@ -14,7 +14,7 @@ pkgname=(
 	"mesa$_suffix"
 )
 pkgdesc="An open-source implementation of the OpenGL specification"
-_asahiver=20230615
+_asahiver=20230706
 _commit=asahi-$_asahiver
 pkgver=23.2.0_pre$_asahiver
 pkgrel=1
@@ -28,7 +28,7 @@ license=('custom')
 options=('debug' '!lto')
 source=(https://gitlab.freedesktop.org/asahi/mesa/-/archive/$_commit/mesa-$_commit.tar.gz
         LICENSE)
-sha512sums=('7d0e43b395a4596fe96a8b24bef5db17f2f6da5662278f496c2dd6b72ca1ffa417d28286b2c48486a422891a863779ab2fd2332bcdcb5bc69d89e3b8b1a10f46'
+sha512sums=('095e20725ce94da2efbccadae0e7b349d330757c3573fe2e3214fe8b650a60897314d98796d697dd087687e30a3cd38e048aa2b7e804bec81a3eab06f2ea23bb'
             'f9f0d0ccf166fe6cb684478b6f1e1ab1f2850431c06aa041738563eb1808a004e52cdec823c103c9e180f03ffc083e95974d291353f0220fe52ae6d4897fecc7')
 
 prepare() {
