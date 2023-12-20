@@ -2,7 +2,7 @@
 
 pkgname=uboot-asahi
 _ver=2023.07.02
-_asahirel=3
+_asahirel=4
 
 pkgver=${_ver}.asahi${_asahirel}
 pkgrel=1
@@ -16,8 +16,8 @@ makedepends=( bc imagemagick )
 source=(
   "u-boot-${_commit_id}.tar.gz::https://github.com/AsahiLinux/u-boot/archive/${_commit_id}.tar.gz"
 )
-sha256sums=('67c08af75338b56b3922653943335a99c1cf3075c56c3728f5f53fd14ac52d9f')
-b2sums=('4374f46d0ac8c57bf2f8f75092b77fa66b10430f0936cffa56f6b38c4a3d81cf34a677da9bf207f1365de4b7104e89624b88d17605828acbe70a2021aad8d872')
+sha256sums=('ecfd98fa66a152d9b525478a90a7f6ad47950188cbdfa5e11b0c83f62770b9da')
+b2sums=('693c4181df35fc26fa4b753014a127c93a5662bdaf7be2391ba2541a9ce4abf988b28e10a90cfb3949ebc5c931060d2313bc59b15a6f12b876326e9f76e59cfb')
 
 prepare() {
   cd "${srcdir}/$_srcname"
